@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+
+<h2>Productos</h2>
+
+<div class="productos">
+    {% for p in productos %}
+    <div class="card">
+
+        <img src="{{ url_for('static', filename='img/' + p.imagen) }}">
+
+        <h3>{{ p.nombre }}</h3>
+        <p>Precio: ${{ p.precio }}</p>
+
+        <form method="POST" action="/comprar">
+            <input type="hidden" name="producto" value="{{ p.nombre }}">
+
+            <input type="text" name="nombre" placeholder="Tu nombre" required>
+
+            <input type="email" name="correo" placeholder="Tu correo" required>
+
+            <button type="submit">Comprar</button>
+        </form>
+
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

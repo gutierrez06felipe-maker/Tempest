@@ -1,0 +1,93 @@
+PRODUCTS = [
+    {
+        "id": "1",
+        "name": "Camiseta Tempest Pro-Dark",
+        "price": 140000,
+        "description": "Camiseta tecnica de alto rendimiento con secado rapido.",
+        "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&q=80",
+        "category": "Tops",
+        "gender": "Men",
+        "sizes": ["S", "M", "L", "XL"],
+        "gallery": [
+            "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&q=80",
+            "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&q=80",
+        ],
+        "colors": [
+            {
+                "name": "Negro",
+                "value": "#000000",
+                "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&q=80",
+            },
+            {
+                "name": "Azul",
+                "value": "#2563eb",
+                "image": "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&q=80",
+            },
+        ],
+    },
+    {
+        "id": "2",
+        "name": "Hoodie Tempest Storm",
+        "price": 260000,
+        "description": "Sudadera premium con capucha y aislamiento ligero.",
+        "image": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&q=80",
+        "category": "Outerwear",
+        "gender": "Men",
+        "sizes": ["M", "L", "XL"],
+        "gallery": [
+            "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&q=80",
+        ],
+    },
+    {
+        "id": "3",
+        "name": "Leggings Tempest High-Waist",
+        "price": 192000,
+        "description": "Cintura alta, tejido firme y ajuste comodo.",
+        "image": "https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=800&q=80",
+        "category": "Bottoms",
+        "gender": "Women",
+        "sizes": ["XS", "S", "M", "L"],
+        "gallery": [
+            "https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=800&q=80",
+        ],
+    },
+    {
+        "id": "4",
+        "name": "Top Deportivo Wave",
+        "price": 128000,
+        "description": "Soporte medio para sesiones intensas.",
+        "image": "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&q=80",
+        "category": "Tops",
+        "gender": "Women",
+        "sizes": ["XS", "S", "M", "L"],
+        "gallery": [
+            "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&q=80",
+        ],
+    },
+    {
+        "id": "5",
+        "name": "Gorra Tempest Snapback",
+        "price": 100000,
+        "description": "Visera plana y ajuste seguro.",
+        "image": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&q=80",
+        "category": "Accessories",
+        "gender": "Unisex",
+        "sizes": ["Unico"],
+        "gallery": [
+            "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&q=80",
+        ],
+    },
+    {
+        "id": "6",
+        "name": "Chaqueta de Viento Tempest",
+        "price": 340000,
+        "description": "Ligera, resistente al viento y lista para exterior.",
+        "image": "https://images.unsplash.com/photo-1544441893-675973e31985?w=800&q=80",
+        "category": "Outerwear",
+        "gender": "Men",
+        "sizes": ["S", "M", "L", "XL"],
+        "gallery": [
+            "https://images.unsplash.com/photo-1544441893-675973e31985?w=800&q=80",
+        ],
+    },
+]

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Registro | Tempest Commerce{% endblock %}
+
+{% block content %}
+<section class="section" style="display:grid;place-items:center;min-height:70vh;">
+    <div class="auth-card" style="width:min(560px, 100%);">
+        <div class="section-label">registro</div>
+        <h2 class="section-title" style="margin-bottom:12px;">Crear Cuenta</h2>
+        <p style="margin-bottom:24px;">Registra nuevos usuarios para comprar desde cualquier lugar mediante una URL publica.</p>
+        <form method="post">
+            <label>
+                Email
+                <input type="email" name="email" placeholder="cliente@email.com" required>
+            </label>
+            <label>
+                Contrasena
+                <input type="password" name="password" placeholder="Minimo recomendado: 8 caracteres" required>
+            </label>
+            <label>
+                Confirmar contrasena
+                <input type="password" name="confirm_password" placeholder="Repite la contrasena" required>
+            </label>
+            <button type="submit" class="btn btn-primary">Crear cuenta</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

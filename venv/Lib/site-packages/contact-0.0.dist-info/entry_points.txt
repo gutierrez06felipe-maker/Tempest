@@ -1,0 +1,5 @@
+[console_scripts]
+initialize_contact_db = contact.scripts.initialize_db:main
+
+[paste.app_factory]
+main = contact:main

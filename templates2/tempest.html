@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEMPEST SPORT</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,400;0,700;0,900;1,900&family=Barlow:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#000;--white:#fff;--zinc-900:#18181b;--zinc-800:#27272a;
+  --zinc-700:#3f3f46;--zinc-600:#52525b;--zinc-500:#71717a;--zinc-400:#a1a1aa;
+  --zinc-300:#d4d4d8;--green:#22c55e;--red:#ef4444;--yellow:#eab308;
+}
+html{scroll-behavior:smooth}
+body{background:#0a0a0a;color:var(--white);font-family:'Barlow',sans-serif;overflow-x:hidden}
+.page{display:none;min-height:100vh}
+.page.active{display:block}
+
+/* NAVBAR */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(0,0,0,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--zinc-800)}
+.nav-inner{max-width:1280px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none}
+.logo-icon{width:38px;height:38px;background:var(--white);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;color:var(--black);font-size:22px;letter-spacing:1px}
+.logo-text{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:4px;color:var(--white)}
+.nav-links{display:flex;gap:32px;align-items:center}
+.nav-link{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--zinc-500);cursor:pointer;transition:.2s;border:none;background:none;padding-bottom:2px}
+.nav-link:hover,.nav-link.active{color:var(--white);border-bottom:2px solid var(--white)}
+.nav-actions{display:flex;align-items:center;gap:16px}
+.cart-btn{position:relative;cursor:pointer;color:var(--zinc-500);transition:.2s;background:none;border:none;font-size:20px;padding:4px}
+.cart-btn:hover{color:var(--white)}
+.cart-badge{position:absolute;top:-6px;right:-6px;background:var(--white);color:var(--black);font-size:9px;font-weight:900;width:18px;height:18px;border-radius:2px;display:flex;align-items:center;justify-content:center}
+.user-btn{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--zinc-500);cursor:pointer;background:none;border:none;display:flex;align-items:center;gap:6px;transition:.2s}
+.user-btn:hover{color:var(--white)}
+.user-dropdown{position:absolute;top:100%;right:0;margin-top:8px;width:220px;background:var(--zinc-900);border:1px solid var(--zinc-800);box-shadow:0 20px 40px rgba(0,0,0,.5);display:none;z-index:999}
+.user-dropdown.open{display:block}
+.dropdown-header{padding:14px 16px;border-bottom:1px solid var(--zinc-800)}
+.dropdown-name{font-weight:700;font-size:14px}
+.dropdown-email{color:var(--zinc-500);font-size:11px;margin-top:2px}
+.dropdown-role{color:var(--zinc-600);font-size:9px;text-transform:uppercase;letter-spacing:2px;margin-top:4px}
+.dropdown-item{display:flex;align-items:center;gap:10px;padding:10px 16px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:.15s;background:none;border:none;width:100%;color:var(--white)}
+.dropdown-item:hover{background:var(--zinc-800)}
+.dropdown-item.danger{color:var(--red)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.hamburger span{width:22px;height:2px;background:var(--zinc-500);transition:.2s}
+.mobile-menu{display:none;background:var(--zinc-900);border-bottom:1px solid var(--zinc-800);padding:16px 20px}
+.mobile-menu.open{display:block}
+.mobile-link{display:block;padding:14px 0;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--zinc-500);cursor:pointer;border:none;background:none;width:100%;text-align:left;transition:.2s}
+.mobile-link:hover{color:var(--white)}
+
+/* TOAST */
+.toast-container{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{padding:14px 20px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:900;letter-spacing:2px;text-transform:uppercase;border-left:3px solid var(--white);background:var(--zinc-900);color:var(--white);animation:slideIn .3s ease;max-width:300px}
+.toast.success{border-color:var(--green)}
+.toast.error{border-color:var(--red)}
+@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+/* BUTTONS */
+.btn{font-family:'Barlow Condensed',sans-serif;font-weight:900;text-transform:uppercase;letter-spacing:3px;cursor:pointer;transition:.2s;border:none;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn-primary{background:var(--white);color:var(--black);padding:14px 28px;font-size:11px}
+.btn-primary:hover{background:var(--zinc-300)}
+.btn-outline{background:transparent;color:var(--white);border:2px solid var(--white);padding:12px 28px;font-size:11px}
+.btn-outline:hover{background:var(--white);color:var(--black)}
+.btn-sm{padding:8px 18px;font-size:10px}
+.btn-full{width:100%}
+.btn-danger{background:var(--red);color:var(--white);padding:10px 20px;font-size:10px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* FORMS */
+.input{width:100%;background:var(--black);border:1px solid var(--zinc-800);color:var(--white);padding:12px 16px;font-family:'Barlow',sans-serif;font-size:14px;outline:none;transition:.2s}
+.input:focus{border-color:var(--white)}
+.input::placeholder{color:var(--zinc-700)}
+.label{display:block;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--white);margin-bottom:8px}
+.form-group{margin-bottom:20px}
+.select{width:100%;background:var(--black);border:1px solid var(--zinc-800);color:var(--white);padding:12px 16px;font-family:'Barlow',sans-serif;font-size:14px;outline:none;transition:.2s;cursor:pointer}
+.select:focus{border-color:var(--white)}
+.textarea{width:100%;background:var(--black);border:1px solid var(--zinc-800);color:var(--white);padding:12px 16px;font-family:'Barlow',sans-serif;font-size:14px;outline:none;resize:vertical;min-height:100px;transition:.2s}
+.textarea:focus{border-color:var(--white)}
+
+/* CARDS & PANELS */
+.card{background:rgba(24,24,27,.6);border:1px solid var(--zinc-800);padding:24px}
+.card-hover{transition:.2s}
+.card-hover:hover{border-color:var(--white)}
+
+/* SECTION */
+section{padding:80px 20px}
+.container{max-width:1280px;margin:0 auto}
+.section-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:900;letter-spacing:4px;text-transform:uppercase;color:var(--zinc-500);margin-bottom:8px;display:block;border-left:3px solid var(--white);padding-left:10px}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,5rem);letter-spacing:2px;line-height:1;margin-bottom:8px}
+
+/* HERO */
+#home{padding-top:0}
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:60px 20px;background:radial-gradient(ellipse at 60% 40%,rgba(255,255,255,.04) 0%,transparent 60%)}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,12vw,9rem);letter-spacing:4px;line-height:.9;margin-bottom:24px;animation:fadeUp .8s ease}
+.hero-title span{color:var(--zinc-600)}
+.hero-sub{font-family:'Barlow Condensed',sans-serif;font-size:clamp(.8rem,2vw,1.1rem);font-weight:700;letter-spacing:5px;text-transform:uppercase;color:var(--zinc-400);margin-bottom:40px;max-width:500px;animation:fadeUp .8s .2s ease both}
+.hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;animation:fadeUp .8s .4s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+/* PRODUCT GRID */
+.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px}
+.product-card{background:var(--zinc-900);border:1px solid var(--zinc-800);cursor:pointer;transition:.3s;overflow:hidden;group:true}
+.product-card:hover{border-color:var(--zinc-600);transform:translateY(-2px)}
+.product-img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;background:var(--zinc-800);filter:grayscale(20%);transition:.4s}
+.product-card:hover .product-img{filter:grayscale(0%)}
+.product-info{padding:16px}
+.product-cat{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:900;letter-spacing:4px;text-transform:uppercase;color:var(--zinc-600);margin-bottom:4px}
+.product-name{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;letter-spacing:1px;text-transform:uppercase;color:var(--white);margin-bottom:8px}
+.product-price{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:var(--white)}
+.product-gender{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--zinc-700);margin-top:4px}
+
+/* BADGE */
+.badge{display:inline-block;padding:3px 10px;font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:900;letter-spacing:3px;text-transform:uppercase;border:1px solid var(--zinc-700);color:var(--zinc-400)}
+.badge-active{border-color:var(--white);background:var(--white);color:var(--black)}
+
+/* FILTER BAR */
+.filter-bar{margin-bottom:40px}
+.filter-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.filter-label-sm{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:900;letter-spacing:4px;text-transform:uppercase;color:var(--zinc-600);margin-bottom:6px;display:block}
+
+/* PRODUCT DETAIL */
+.product-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.main-img{width:100%;aspect-ratio:4/5;object-fit:cover;background:var(--zinc-900)}
+.thumb-row{display:flex;gap:8px;margin-top:12px}
+.thumb{width:70px;height:88px;object-fit:cover;cursor:pointer;border:1px solid var(--zinc-800);transition:.2s;opacity:.6}
+.thumb:hover,.thumb.active{border-color:var(--white);opacity:1}
+.detail-price{font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:2px;margin-bottom:20px}
+.size-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.size-btn{padding:8px 16px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:900;letter-spacing:2px;text-transform:uppercase;background:var(--zinc-900);border:1px solid var(--zinc-800);color:var(--zinc-400);cursor:pointer;transition:.2s}
+.size-btn:hover{border-color:var(--zinc-500);color:var(--white)}
+.size-btn.selected{background:var(--white);border-color:var(--white);color:var(--black)}
+.color-row{display:flex;gap:10px;margin-bottom:24px}
+.color-dot{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:.2s}
+.color-dot.selected,.color-dot:hover{border-color:var(--white);transform:scale(1.1)}
+
+/* CART */
+.cart-item{display:flex;gap:16px;background:rgba(24,24,27,.6);border:1px solid var(--zinc-800);padding:16px;margin-bottom:12px;align-items:center}
+.cart-item-img{width:80px;height:104px;object-fit:cover;background:var(--zinc-800);flex-shrink:0}
+.cart-summary{background:var(--zinc-900);border:1px solid var(--zinc-800);padding:28px;position:sticky;top:80px}
+.divider{border:none;border-top:1px solid var(--zinc-800);margin:16px 0}
+
+/* CHECKOUT */
+.payment-method-btn{padding:14px 16px;border:1px solid var(--zinc-800);background:transparent;color:var(--zinc-400);cursor:pointer;transition:.2s;text-align:left;display:flex;align-items:center;gap:12px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:900;letter-spacing:2px;text-transform:uppercase;width:100%}
+.payment-method-btn:hover,.payment-method-btn.selected{border-color:var(--white);color:var(--white);background:rgba(255,255,255,.04)}
+
+/* ORDER STATUS */
+.status-badge{display:inline-block;padding:4px 12px;font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:900;letter-spacing:3px;text-transform:uppercase}
+.status-pendiente{background:rgba(234,179,8,.15);color:var(--yellow);border:1px solid rgba(234,179,8,.3)}
+.status-procesando{background:rgba(59,130,246,.15);color:#60a5fa;border:1px solid rgba(59,130,246,.3)}
+.status-enviado{background:rgba(168,85,247,.15);color:#c084fc;border:1px solid rgba(168,85,247,.3)}
+.status-entregado{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+.status-cancelado{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3)}
+
+/* ADMIN */
+.admin-layout{display:flex;min-height:100vh;padding-top:60px}
+.admin-sidebar{width:240px;background:var(--zinc-900);border-right:1px solid var(--zinc-800);padding:24px 0;position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;flex-shrink:0}
+.admin-content{flex:1;padding:32px;overflow-x:hidden}
+.sidebar-item{display:flex;align-items:center;gap:12px;padding:12px 20px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--zinc-500);cursor:pointer;transition:.2s;border:none;background:none;width:100%;text-align:left}
+.sidebar-item:hover,.sidebar-item.active{color:var(--white);background:rgba(255,255,255,.06);border-right:2px solid var(--white)}
+.sidebar-icon{font-size:16px;width:18px;text-align:center}
+.stat-card{background:var(--zinc-900);border:1px solid var(--zinc-800);padding:20px;margin-bottom:16px}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;line-height:1}
+.stat-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--zinc-500);margin-top:4px}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;margin-bottom:32px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--zinc-600);padding:10px 12px;text-align:left;border-bottom:1px solid var(--zinc-800)}
+td{font-size:13px;padding:12px;border-bottom:1px solid var(--zinc-900);color:var(--zinc-300)}
+tr:hover td{background:rgba(255,255,255,.02)}
+
+/* FEATURES */
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:32px;text-align:center}
+.feature-icon{width:60px;height:60px;background:var(--zinc-900);border:1px solid var(--zinc-800);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:26px;transition:.2s}
+.feature-icon:hover{border-color:var(--white)}
+.feature-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:14px;letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}
+.feature-desc{color:var(--zinc-500);font-size:13px}
+
+/* SERVICES */
+.service-card{border:1px solid var(--zinc-800);padding:28px;cursor:pointer;transition:.2s}
+.service-card:hover{border-color:var(--white)}
+.service-icon{font-size:36px;margin-bottom:16px}
+
+/* ABOUT */
+.about-section{max-width:1280px;margin:0 auto;padding-top:80px}
+.about-hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,8vw,7rem);letter-spacing:3px;line-height:1;text-align:center;margin-bottom:32px;animation:fadeUp .8s ease}
+.values-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;margin-top:32px}
+.value-card{background:rgba(24,24,27,.6);border:1px solid var(--zinc-800);padding:24px;transition:.2s}
+.value-card:hover{border-color:var(--zinc-600)}
+.value-icon{font-size:32px;margin-bottom:12px}
+.value-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:14px;letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}
+
+/* SUPPORT */
+.support-grid{display:grid;grid-template-columns:1fr 2fr;gap:32px;align-items:start;max-width:1000px;margin:0 auto}
+.contact-info{background:var(--zinc-900);border:1px solid var(--zinc-800);padding:24px}
+.contact-item{display:flex;align-items:flex-start;gap:12px;margin-bottom:20px}
+.contact-icon{font-size:20px;margin-top:2px;flex-shrink:0}
+.contact-label{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--zinc-600);margin-bottom:4px}
+.contact-val{font-size:13px;color:var(--zinc-300)}
+
+/* ALERT */
+.alert{padding:14px 18px;border-left:3px solid var(--zinc-600);background:rgba(24,24,27,.8);margin-bottom:16px;font-size:13px;color:var(--zinc-300)}
+.alert-success{border-color:var(--green);background:rgba(34,197,94,.1)}
+.alert-error{border-color:var(--red);background:rgba(239,68,68,.1)}
+.alert-info{border-color:#60a5fa;background:rgba(59,130,246,.1)}
+
+/* SEARCH */
+.search-wrap{position:relative;margin-bottom:24px}
+.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--zinc-600);font-size:16px}
+.search-input{width:100%;background:rgba(24,24,27,.4);border:none;border-bottom:1px solid var(--zinc-800);color:var(--white);padding:14px 14px 14px 44px;font-size:15px;outline:none;transition:.2s;font-family:'Barlow',sans-serif}
+.search-input:focus{border-color:var(--white)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--zinc-900);border:1px solid var(--zinc-800);padding:32px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;margin-bottom:24px}
+
+/* STEP TRACKER */
+.step-track{display:flex;align-items:center;gap:4px;margin-bottom:32px}
+.step{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1}
+.step-dot{width:28px;height:28px;border-radius:50%;background:var(--zinc-800);border:2px solid var(--zinc-700);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:900;color:var(--zinc-500)}
+.step-dot.done{background:var(--white);border-color:var(--white);color:var(--black)}
+.step-dot.active{border-color:var(--white);color:var(--white)}
+.step-label{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--zinc-600)}
+.step-line{flex:1;height:1px;background:var(--zinc-800)}
+.step-line.done{background:var(--white)}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .product-detail-grid{grid-template-columns:1fr}
+  .admin-layout{flex-direction:column}
+  .admin-sidebar{width:100%;height:auto;position:static;padding:12px 0}
+  .support-grid{grid-template-columns:1fr}
+  .admin-content{padding:16px}
+}
+@media(max-width:600px){
+  .product-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+}
+@media(max-width:400px){
+  .product-grid{grid-template-columns:1fr}
+}
+
+/* UTILS */
+.text-center{text-align:center}
+.text-muted{color:var(--zinc-500)}
+.text-sm{font-size:12px}
+.text-xs{font-size:11px;font-family:'Barlow Condensed',sans-serif;font-weight:900;letter-spacing:2px;text-transform:uppercase}
+.text-green{color:var(--green)}
+.text-red{color:var(--red)}
+.text-yellow{color:var(--yellow)}
+.mt-4{margin-top:16px}
+.mt-8{margin-top:32px}
+.mb-4{margin-bottom:16px}
+.mb-8{margin-bottom:32px}
+.flex{display:flex}
+.flex-col{flex-direction:column}
+.items-center{align-items:center}
+.justify-between{justify-content:space-between}
+.justify-center{justify-content:center}
+.gap-2{gap:8px}
+.gap-3{gap:12px}
+.gap-4{gap:16px}
+.w-full{width:100%}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.pt-nav{padding-top:80px}
+.empty-state{text-align:center;padding:80px 20px}
+.empty-icon{font-size:72px;opacity:.2;margin-bottom:20px}
+.empty-title{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;color:var(--zinc-400);margin-bottom:12px}
+.empty-sub{color:var(--zinc-600);font-size:13px;margin-bottom:24px}
+.demo-card{background:rgba(24,24,27,.6);border:1px solid var(--zinc-800);padding:12px;margin-top:8px}
+.demo-role{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--zinc-500);margin-bottom:4px}
+.demo-email{font-size:13px;color:var(--white)}
+.demo-pass{font-size:11px;color:var(--zinc-500)}
+.section-sub{color:var(--zinc-500);font-size:11px;font-family:'Barlow Condensed',sans-serif;font-weight:900;letter-spacing:3px;text-transform:uppercase;margin-bottom:32px}
+.count-badge{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--zinc-500);letter-spacing:1px}
+.back-link{display:inline-flex;align-items:center;gap:8px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--zinc-500);cursor:pointer;margin-bottom:24px;transition:.2s;background:none;border:none}
+.back-link:hover{color:var(--white)}
+.page-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,4rem);letter-spacing:3px;margin-bottom:32px}
+.no-results{text-align:center;padding:60px;border:1px solid var(--zinc-900);background:rgba(24,24,27,.2)}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo" onclick="navigate('home')">
+      <div class="logo-icon">T</div>
+      <span class="logo-text">TEMPEST</span>
+    </div>
+    <div class="nav-links">
+      <button class="nav-link active" onclick="navigate('home')" data-page="home">Inicio</button>
+      <button class="nav-link" onclick="navigate('catalog')" data-page="catalog">Catálogo</button>
+      <button class="nav-link" onclick="navigate('about')" data-page="about">Nosotros</button>
+      <button class="nav-link" onclick="navigate('support')" data-page="support">Soporte</button>
+    </div>
+    <div class="nav-actions">
+      <div id="userArea" style="position:relative"></div>
+      <button class="cart-btn" onclick="navigate('cart')" title="Carrito">
+        🛒<span class="cart-badge" id="cartBadge" style="display:none">0</span>
+      </button>
+      <button class="hamburger" onclick="toggleMobile()"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-link" onclick="navigate('home');toggleMobile()">Inicio</button>
+    <button class="mobile-link" onclick="navigate('catalog');toggleMobile()">Catálogo</button>
+    <button class="mobile-link" onclick="navigate('about');toggleMobile()">Nosotros</button>
+    <button class="mobile-link" onclick="navigate('support');toggleMobile()">Soporte</button>
+    <div id="mobileUserLinks"></div>
+  </div>
+</nav>
+
+<!-- TOAST -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- PAGES -->
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div>
+      <h1 class="hero-title">DOMINA LA<br><span>TORMENTA</span></h1>
+      <p class="hero-sub">Ropa deportiva de alto rendimiento diseñada para superar tus límites bajo cualquier condición.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" onclick="navigate('catalog')">Comprar Ahora →</button>
+        <button class="btn btn-outline" id="heroSecondBtn" onclick="navigate('register')">Crear Cuenta</button>
+      </div>
+    </div>
+  </div>
+
+  <section style="background:rgba(0,0,0,.4);border-top:1px solid #27272a;border-bottom:1px solid #27272a">
+    <div class="container">
+      <div class="flex justify-between items-center mb-8" style="flex-wrap:wrap;gap:16px">
+        <div>
+          <span class="section-label">Destacados</span>
+          <h2 class="section-title" style="font-size:clamp(2rem,5vw,3.5rem)">Nuevos Ingresos</h2>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="navigate('catalog')">Ver Catálogo →</button>
+      </div>
+      <div class="product-grid" id="featuredProducts"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="feature-grid">
+        <div>
+          <div class="feature-icon">⚡</div>
+          <h3 class="feature-title">Máximo Rendimiento</h3>
+          <p class="feature-desc">Materiales seleccionados para mejorar tu desempeño atlético.</p>
+        </div>
+        <div>
+          <div class="feature-icon">🛡️</div>
+          <h3 class="feature-title">Durabilidad Extrema</h3>
+          <p class="feature-desc">Costuras reforzadas y telas resistentes para los entrenamientos más duros.</p>
+        </div>
+        <div>
+          <div class="feature-icon">🔄</div>
+          <h3 class="feature-title">Garantía Tempest</h3>
+          <p class="feature-desc">Cambios sin costo si el talle no es el correcto.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:rgba(24,24,27,.3);border-top:1px solid #27272a;border-bottom:1px solid #27272a">
+    <div class="container">
+      <div class="text-center mb-8">
+        <h2 class="section-title">Experiencia Completa</h2>
+        <p class="section-sub">Todo lo que necesitas en un solo lugar</p>
+      </div>
+      <div class="grid-3" style="gap:20px">
+        <div class="service-card" onclick="navigate('orders')">
+          <div class="service-icon">📦</div>
+          <h3 class="feature-title">Seguimiento de Pedidos</h3>
+          <p class="feature-desc" style="margin-bottom:12px">Rastrea tu pedido en tiempo real desde la compra hasta la entrega</p>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--white)">Ver mis pedidos →</span>
+        </div>
+        <div class="service-card" onclick="navigate('support')">
+          <div class="service-icon">🎧</div>
+          <h3 class="feature-title">Soporte 24/7</h3>
+          <p class="feature-desc" style="margin-bottom:12px">Nuestro equipo está listo para ayudarte con cualquier consulta</p>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--white)">Contactar soporte →</span>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">💳</div>
+          <h3 class="feature-title">Pagos Seguros</h3>
+          <p class="feature-desc">Múltiples métodos: Tarjeta, PSE, Nequi y Contra Entrega</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- CATALOG -->
+<div class="page" id="page-catalog">
+  <div class="container pt-nav" style="padding-bottom:80px">
+    <div class="flex justify-between items-center mb-4" style="flex-wrap:wrap;gap:12px;padding-top:24px">
+      <div>
+        <span class="section-label">Equipamiento Elite</span>
+        <h1 class="section-title" style="font-size:clamp(2.5rem,7vw,5rem)">CATÁLOGO <span style="color:var(--zinc-700);text-decoration:underline;text-decoration-color:var(--zinc-800)">TEMPEST</span></h1>
+      </div>
+      <span class="count-badge" id="productCount">[15] PRODUCTOS</span>
+    </div>
+
+    <div class="filter-bar">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="catalogSearch" placeholder="Buscar por nombre, categoría o tipo..." oninput="filterProducts()">
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:32px;margin-bottom:16px">
+        <div>
+          <span class="filter-label-sm">Género</span>
+          <div class="filter-row" id="genderFilters"></div>
+        </div>
+        <div>
+          <span class="filter-label-sm">Categoría</span>
+          <div class="filter-row" id="categoryFilters"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="catalogGrid" class="product-grid"></div>
+  </div>
+</div>
+
+<!-- PRODUCT DETAIL -->
+<div class="page" id="page-product">
+  <div class="container pt-nav" style="padding-bottom:80px;padding-top:96px">
+    <button class="back-link" onclick="navigate('catalog')">← Volver al Catálogo</button>
+    <div class="product-detail-grid" id="productDetailContent"></div>
+  </div>
+</div>
+
+<!-- CART -->
+<div class="page" id="page-cart">
+  <div class="container pt-nav" style="padding-bottom:80px;padding-top:96px">
+    <h1 class="page-title">TU CARRITO</h1>
+    <div id="cartContent"></div>
+  </div>
+</div>
+
+<!-- CHECKOUT -->
+<div class="page" id="page-checkout">
+  <div class="container pt-nav" style="padding-bottom:80px;padding-top:96px;max-width:1000px">
+    <h1 class="page-title">Finalizar Compra</h1>
+
+    <div class="step-track">
+      <div class="step"><div class="step-dot done">1</div><span class="step-label">Entrega</span></div>
+      <div class="step-line" id="line1"></div>
+      <div class="step"><div class="step-dot" id="step2dot">2</div><span class="step-label">Pago</span></div>
+      <div class="step-line" id="line2"></div>
+      <div class="step"><div class="step-dot" id="step3dot">3</div><span class="step-label">Confirmar</span></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 340px;gap:32px;align-items:start">
+      <div>
+        <!-- Delivery -->
+        <div class="card mb-4" id="deliveryForm">
+          <h2 style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;margin-bottom:20px">Información de Entrega</h2>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="label">Nombre Completo</label>
+              <input type="text" class="input" id="del-name" required>
+            </div>
+            <div class="form-group">
+              <label class="label">Teléfono</label>
+              <input type="tel" class="input" id="del-phone">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="label">Dirección</label>
+            <input type="text" class="input" id="del-address" required>
+          </div>
+          <div class="form-group">
+            <label class="label">Ciudad</label>
+            <input type="text" class="input" id="del-city" required>
+          </div>
+          <div class="form-group">
+            <label class="label">Notas de Entrega (Opcional)</label>
+            <textarea class="textarea" id="del-notes" placeholder="Apartamento, oficina, referencias, etc." style="min-height:72px"></textarea>
+          </div>
+        </div>
+
+        <!-- Payment -->
+        <div class="card mb-4">
+          <h2 style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;margin-bottom:20px">Método de Pago</h2>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px">
+            <button class="payment-method-btn selected" onclick="selectPayment('tarjeta',this)">💳 Tarjeta</button>
+            <button class="payment-method-btn" onclick="selectPayment('pse',this)">🏦 PSE</button>
+            <button class="payment-method-btn" onclick="selectPayment('nequi',this)">📱 Nequi</button>
+            <button class="payment-method-btn" onclick="selectPayment('contraentrega',this)">📦 Contra Entrega</button>
+          </div>
+          <div id="paymentFields">
+            <div id="fields-tarjeta">
+              <div class="grid-2">
+                <div class="form-group">
+                  <label class="label">Número de Tarjeta</label>
+                  <input type="text" class="input" id="card-number" placeholder="**** **** **** ****" maxlength="19">
+                </div>
+                <div class="form-group">
+                  <label class="label">Nombre en Tarjeta</label>
+                  <input type="text" class="input" id="card-name" placeholder="JUAN PEREZ">
+                </div>
+                <div class="form-group">
+                  <label class="label">Vencimiento</label>
+                  <input type="text" class="input" id="card-expiry" placeholder="MM/AA" maxlength="5">
+                </div>
+                <div class="form-group">
+                  <label class="label">CVV</label>
+                  <input type="text" class="input" id="card-cvv" placeholder="***" maxlength="4">
+                </div>
+              </div>
+            </div>
+            <div id="fields-pse" style="display:none">
+              <div class="form-group">
+                <label class="label">Banco</label>
+                <select class="select" id="pse-bank">
+                  <option value="">Selecciona tu banco</option>
+                  <option>Bancolombia</option><option>Davivienda</option><option>BBVA</option>
+                  <option>Banco de Bogotá</option><option>Banco Popular</option><option>Banco Caja Social</option>
+                  <option>Nequi</option><option>Nubank</option>
+                </select>
+              </div>
+              <div class="grid-2">
+                <div class="form-group">
+                  <label class="label">Tipo de Documento</label>
+                  <select class="select" id="pse-doctype">
+                    <option>CC</option><option>CE</option><option>NIT</option><option>Pasaporte</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="label">Número de Documento</label>
+                  <input type="text" class="input" id="pse-docnum" placeholder="123456789">
+                </div>
+              </div>
+            </div>
+            <div id="fields-nequi" style="display:none">
+              <div class="form-group">
+                <label class="label">Número de Celular Nequi</label>
+                <input type="tel" class="input" id="nequi-phone" placeholder="3XX XXX XXXX">
+              </div>
+              <div class="alert alert-info">📱 Se enviará una notificación a tu app Nequi para confirmar el pago.</div>
+            </div>
+            <div id="fields-contraentrega" style="display:none">
+              <div class="alert alert-info">📦 Paga al recibir tu pedido. Se aplica cargo adicional de $5,000 COP.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="cart-summary">
+        <h3 style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;font-style:italic;margin-bottom:20px;border-bottom:1px solid var(--zinc-800);padding-bottom:14px">Resumen del Pedido</h3>
+        <div id="checkoutSummary"></div>
+        <hr class="divider">
+        <div class="flex justify-between mb-2">
+          <span class="text-muted text-xs">Envío</span>
+          <span class="text-green text-xs" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;letter-spacing:2px">GRATIS</span>
+        </div>
+        <div id="extraChargeRow" style="display:none" class="flex justify-between mb-2">
+          <span class="text-muted text-xs">Contra Entrega</span>
+          <span class="text-xs" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;letter-spacing:2px">$5,000</span>
+        </div>
+        <hr class="divider">
+        <div class="flex justify-between items-center mb-6">
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;font-style:italic">TOTAL</span>
+          <span id="checkoutTotal" style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px"></span>
+        </div>
+        <button class="btn btn-primary btn-full" onclick="placeOrder()" id="placeOrderBtn">
+          Confirmar Pedido ✓
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ORDER SUCCESS -->
+<div class="page" id="page-ordersuccess">
+  <div class="container pt-nav" style="padding-bottom:80px;text-align:center;padding-top:120px">
+    <div style="width:80px;height:80px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:36px">✓</div>
+    <h1 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,5rem);letter-spacing:3px;margin-bottom:12px">¡Pedido Exitoso!</h1>
+    <p class="text-muted" style="margin-bottom:8px;font-size:14px">Tu pedido ha sido registrado correctamente</p>
+    <p style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;color:var(--zinc-400);margin-bottom:40px">Número de pedido: <span id="successOrderId" style="color:var(--white)"></span></p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="navigate('orders')">Ver Mis Pedidos</button>
+      <button class="btn btn-outline" onclick="navigate('catalog')">Seguir Comprando</button>
+    </div>
+  </div>
+</div>
+
+<!-- ORDERS -->
+<div class="page" id="page-orders">
+  <div class="container pt-nav" style="padding-bottom:80px;padding-top:96px">
+    <h1 class="page-title">MIS PEDIDOS</h1>
+    <div id="ordersContent"></div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div class="page" id="page-login">
+  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 20px">
+    <div style="width:100%;max-width:420px">
+      <div class="text-center" style="margin-bottom:32px">
+        <div style="width:60px;height:60px;background:var(--zinc-900);border:1px solid var(--zinc-800);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:26px">🔑</div>
+        <h1 style="font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:3px;font-style:italic">Iniciar Sesión</h1>
+        <p class="text-muted text-xs" style="margin-top:8px">Accede a tu cuenta Tempest</p>
+      </div>
+      <div class="card">
+        <div class="form-group">
+          <label class="label">Correo Electrónico</label>
+          <input type="email" class="input" id="loginEmail" placeholder="tu@email.com" onkeydown="if(event.key==='Enter')doLogin()">
+        </div>
+        <div class="form-group">
+          <label class="label">Contraseña</label>
+          <input type="password" class="input" id="loginPassword" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+          <div style="text-align:right;margin-top:6px">
+            <button onclick="navigate('forgotpassword')" style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--zinc-500);background:none;border:none;cursor:pointer;transition:.2s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color=''">¿Olvidaste tu contraseña?</button>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-full" onclick="doLogin()" id="loginBtn">Ingresar</button>
+        <p class="text-center text-muted" style="margin-top:16px;font-size:13px">¿No tienes cuenta? <button onclick="navigate('register')" style="color:var(--white);background:none;border:none;cursor:pointer;font-weight:700;font-size:13px">Regístrate aquí</button></p>
+        <hr class="divider">
+        <p class="text-xs text-center" style="color:var(--zinc-600);margin-bottom:10px">Usuarios de Demostración</p>
+        <div class="demo-card">
+          <div class="demo-role">Cliente</div>
+          <div class="demo-email">cliente@tempest.com</div>
+          <div class="demo-pass">Contraseña: tempest123</div>
+        </div>
+        <div class="demo-card" style="border-color:rgba(234,179,8,.3);background:rgba(234,179,8,.04)">
+          <div class="demo-role" style="color:var(--yellow)">Administrador</div>
+          <div class="demo-email">admin@tempest.com</div>
+          <div class="demo-pass">Contraseña: tempest123</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REGISTER -->
+<div class="page" id="page-register">
+  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 20px">
+    <div style="width:100%;max-width:440px">
+      <div class="text-center" style="margin-bottom:32px">
+        <div style="width:60px;height:60px;background:var(--white);border-radius:4px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:26px;color:var(--black)">➕</div>
+        <h1 style="font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:3px;font-style:italic">Crear Cuenta</h1>
+        <p class="text-muted text-xs" style="margin-top:8px">Únete a la legión de la tormenta</p>
+      </div>
+      <div class="card">
+        <div class="form-group">
+          <label class="label">Nombre Completo</label>
+          <input type="text" class="input" id="reg-name" placeholder="JUAN PEREZ">
+        </div>
+        <div class="form-group">
+          <label class="label">Email</label>
+          <input type="email" class="input" id="reg-email" placeholder="EMAIL@EJEMPLO.COM">
+        </div>
+        <div class="form-group">
+          <label class="label">Tipo de Cuenta</label>
+          <select class="select" id="reg-role" onchange="toggleAdminField()">
+            <option value="cliente">Cliente</option>
+            <option value="admin">Administrador</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="label">Contraseña</label>
+          <input type="password" class="input" id="reg-password" placeholder="Mínimo 6 caracteres">
+        </div>
+        <div class="form-group">
+          <label class="label">Teléfono (Opcional)</label>
+          <input type="tel" class="input" id="reg-phone" placeholder="3XX XXX XXXX">
+        </div>
+        <div class="form-group">
+          <label class="label">Dirección (Opcional)</label>
+          <input type="text" class="input" id="reg-address" placeholder="Calle 123 # 45-67, Bogotá">
+        </div>
+        <div class="form-group" id="adminPasswordField" style="display:none">
+          <label class="label">Contraseña de Administrador</label>
+          <input type="password" class="input" id="reg-adminpass" placeholder="Contraseña secreta de admin">
+        </div>
+        <button class="btn btn-primary btn-full" onclick="doRegister()" id="registerBtn">Crear Cuenta</button>
+        <p class="text-center text-muted" style="margin-top:16px;font-size:13px">¿Ya tienes cuenta? <button onclick="navigate('login')" style="color:var(--white);background:none;border:none;cursor:pointer;font-weight:700;font-size:13px">Inicia sesión</button></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FORGOT PASSWORD -->
+<div class="page" id="page-forgotpassword">
+  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 20px">
+    <div style="width:100%;max-width:420px">
+      <div class="text-center" style="margin-bottom:32px">
+        <div style="font-size:48px;margin-bottom:16px">🔒</div>
+        <h1 style="font-family:'Bebas Neue',sans-serif;font-size:40px;letter-spacing:3px;font-style:italic">Recuperar Contraseña</h1>
+        <p class="text-muted" style="font-size:13px;margin-top:8px">Ingresa tu email y te enviaremos instrucciones</p>
+      </div>
+      <div class="card">
+        <div id="forgotResult"></div>
+        <div class="form-group">
+          <label class="label">Correo Electrónico</label>
+          <input type="email" class="input" id="forgot-email" placeholder="tu@email.com">
+        </div>
+        <button class="btn btn-primary btn-full" onclick="doForgotPassword()">Enviar Instrucciones</button>
+        <p class="text-center" style="margin-top:16px"><button onclick="navigate('login')" style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--zinc-500);background:none;border:none;cursor:pointer">← Volver al Login</button></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div class="page" id="page-profile">
+  <div class="container pt-nav" style="padding-bottom:80px;padding-top:96px;max-width:600px">
+    <h1 class="page-title">Mi Perfil</h1>
+    <div class="card">
+      <div class="form-group">
+        <label class="label">Nombre Completo</label>
+        <input type="text" class="input" id="profile-name">
+      </div>
+      <div class="form-group">
+        <label class="label">Email</label>
+        <input type="email" class="input" id="profile-email" disabled style="opacity:.5">
+      </div>
+      <div class="form-group">
+        <label class="label">Teléfono</label>
+        <input type="tel" class="input" id="profile-phone" placeholder="3XX XXX XXXX">
+      </div>
+      <div class="form-group">
+        <label class="label">Dirección</label>
+        <input type="text" class="input" id="profile-address" placeholder="Calle 123 # 45-67, Bogotá">
+      </div>
+      <div class="form-group">
+        <label class="label">Rol</label>
+        <input type="text" class="input" id="profile-role" disabled style="opacity:.5">
+      </div>
+      <button class="btn btn-primary btn-full" onclick="saveProfile()">Guardar Cambios</button>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="page" id="page-about">
+  <div class="container about-section" style="padding-bottom:80px">
+    <h1 class="about-hero-title">NUESTRA <span style="color:var(--zinc-600)">HISTORIA</span></h1>
+    <p style="color:var(--zinc-400);font-size:16px;max-width:800px;margin:0 auto 60px;border-left:4px solid var(--zinc-800);padding-left:24px;line-height:1.8;font-weight:500;letter-spacing:2px;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif">
+      Tempest nació de la necesidad de ropa que no solo soporte el entrenamiento más riguroso, sino que también defina una actitud imparable ante cualquier adversidad.
+    </p>
+
+    <div class="card mb-8">
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;font-style:italic;margin-bottom:20px">El Origen de la Tormenta</h2>
+      <p style="color:var(--zinc-400);line-height:1.8;margin-bottom:12px;font-size:15px">En 2024, un grupo de atletas profesionales y diseñadores textiles se unieron con una visión compartida: crear ropa deportiva que combinara rendimiento extremo con un diseño minimalista y agresivo.</p>
+      <p style="color:var(--zinc-400);line-height:1.8;margin-bottom:12px;font-size:15px">Cansados de las opciones comerciales que priorizaban la moda sobre la función, fundaron <strong style="color:var(--white)">TEMPEST SPORT</strong> — un nombre que simboliza la fuerza imparable de la naturaleza y la determinación del atleta moderno.</p>
+    </div>
+
+    <div class="grid-2 mb-8">
+      <div class="card card-hover">
+        <h3 style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;font-style:italic;margin-bottom:12px">🎯 Misión</h3>
+        <p style="color:var(--zinc-400);line-height:1.8;font-size:14px">Diseñar y producir ropa deportiva de alto rendimiento que empodere a los atletas para superar sus límites, combinando innovación textil con un estilo agresivo y funcional.</p>
+      </div>
+      <div class="card card-hover">
+        <h3 style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;font-style:italic;margin-bottom:12px">🔭 Visión</h3>
+        <p style="color:var(--zinc-400);line-height:1.8;font-size:14px">Ser la marca de ropa deportiva de referencia en Colombia y Latinoamérica, reconocida por la calidad extrema de sus productos y la comunidad de atletas de élite que la representa.</p>
+      </div>
+    </div>
+
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;font-style:italic;margin-bottom:20px">Nuestros Valores</h2>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-icon">⚡</div>
+        <h4 class="value-title">Rendimiento</h4>
+        <p style="color:var(--zinc-500);font-size:13px">Cada pieza diseñada para maximizar tu desempeño atlético</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🎯</div>
+        <h4 class="value-title">Precisión</h4>
+        <p style="color:var(--zinc-500);font-size:13px">Atención obsesiva a cada detalle de diseño y fabricación</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🌎</div>
+        <h4 class="value-title">Impacto</h4>
+        <p style="color:var(--zinc-500);font-size:13px">Comprometidos con prácticas sostenibles y responsables</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">❤️</div>
+        <h4 class="value-title">Comunidad</h4>
+        <p style="color:var(--zinc-500);font-size:13px">Construyendo una familia de atletas apasionados</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUPPORT -->
+<div class="page" id="page-support">
+  <div class="container pt-nav" style="padding-bottom:80px;padding-top:96px">
+    <div class="text-center mb-8">
+      <h1 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,4.5rem);letter-spacing:3px;font-style:italic">Soporte al Cliente</h1>
+      <p class="text-muted text-xs" style="margin-top:8px">Estamos aquí para ayudarte</p>
+    </div>
+    <div class="support-grid">
+      <div>
+        <div class="contact-info">
+          <h3 style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;margin-bottom:20px">Contáctanos</h3>
+          <div class="contact-item">
+            <div class="contact-icon">📧</div>
+            <div><div class="contact-label">Email</div><div class="contact-val">soporte@tempest.com</div></div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📞</div>
+            <div><div class="contact-label">Teléfono</div><div class="contact-val">+57 300 123 4567</div></div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">⏰</div>
+            <div><div class="contact-label">Horario</div><div class="contact-val">Lun–Sáb 8am–8pm</div></div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📍</div>
+            <div><div class="contact-label">Ubicación</div><div class="contact-val">Bogotá, Colombia</div></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div id="supportFormArea">
+          <div class="card">
+            <h3 style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;font-style:italic;margin-bottom:20px">Envíanos un Mensaje</h3>
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="label">Nombre</label>
+                <input type="text" class="input" id="sup-name">
+              </div>
+              <div class="form-group">
+                <label class="label">Email</label>
+                <input type="email" class="input" id="sup-email">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="label">Asunto</label>
+              <select class="select" id="sup-subject">
+                <option value="">Selecciona el motivo</option>
+                <option>Problema con mi pedido</option>
+                <option>Devolución / Cambio</option>
+                <option>Pregunta sobre productos</option>
+                <option>Problema de pago</option>
+                <option>Información general</option>
+                <option>Otro</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="label">Número de Pedido (Opcional)</label>
+              <input type="text" class="input" id="sup-order" placeholder="123456789">
+            </div>
+            <div class="form-group">
+              <label class="label">Mensaje</label>
+              <textarea class="textarea" id="sup-message" placeholder="Describe tu consulta o problema en detalle..."></textarea>
+            </div>
+            <button class="btn btn-primary btn-full" onclick="sendSupportTicket()">Enviar Mensaje 📨</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN DASHBOARD -->
+<div class="page" id="page-admin">
+  <div class="admin-layout">
+    <div class="admin-sidebar">
+      <div style="padding:0 20px 20px;border-bottom:1px solid var(--zinc-800);margin-bottom:12px">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;color:var(--white)">ADMIN</div>
+        <div style="font-size:11px;color:var(--zinc-600);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px">Panel de Control</div>
+      </div>
+      <button class="sidebar-item active" onclick="adminSection('dashboard',this)"><span class="sidebar-icon">📊</span>Dashboard</button>
+      <button class="sidebar-item" onclick="adminSection('products',this)"><span class="sidebar-icon">👕</span>Productos</button>
+      <button class="sidebar-item" onclick="adminSection('add-product',this)"><span class="sidebar-icon">➕</span>Agregar Producto</button>
+      <button class="sidebar-item" onclick="adminSection('orders',this)"><span class="sidebar-icon">📦</span>Pedidos</button>
+      <button class="sidebar-item" onclick="adminSection('users',this)"><span class="sidebar-icon">👥</span>Usuarios</button>
+      <button class="sidebar-item" onclick="adminSection('tickets',this)"><span class="sidebar-icon">🎫</span>Soporte</button>
+      <hr style="border-color:var(--zinc-800);margin:12px 0">
+      <button class="sidebar-item" onclick="navigate('catalog')"><span class="sidebar-icon">🏪</span>Ver Tienda</button>
+      <button class="sidebar-item" style="color:var(--red)" onclick="doLogout()"><span class="sidebar-icon">🚪</span>Cerrar Sesión</button>
+    </div>
+    <div class="admin-content" id="adminContent"></div>
+  </div>
+</div>
+
+<!-- VENDOR DASHBOARD -->
+<div class="page" id="page-vendor">
+  <div class="container pt-nav" style="padding-bottom:80px;padding-top:96px">
+    <h1 class="page-title">Panel de Vendedor</h1>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start">
+      <div class="card">
+        <h2 style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;font-style:italic;margin-bottom:20px">Publicar Nuevo Producto</h2>
+        <div class="form-group">
+          <label class="label">Nombre del Producto</label>
+          <input type="text" class="input" id="ven-name" placeholder="Camiseta Pro...">
+        </div>
+        <div class="form-group">
+          <label class="label">Precio (COP)</label>
+          <input type="number" class="input" id="ven-price" placeholder="150000">
+        </div>
+        <div class="form-group">
+          <label class="label">Descripción</label>
+          <textarea class="textarea" id="ven-desc" placeholder="Describe el producto..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="label">URL de Imagen</label>
+          <input type="url" class="input" id="ven-image" placeholder="https://...">
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="label">Categoría</label>
+            <select class="select" id="ven-cat">
+              <option>Tops</option><option>Bottoms</option><option>Accessories</option>
+              <option>Compression</option><option>Outerwear</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="label">Género</label>
+            <select class="select" id="ven-gender">
+              <option>Men</option><option>Women</option><option>Unisex</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="label">Tallas (separadas por coma)</label>
+          <input type="text" class="input" id="ven-sizes" placeholder="S, M, L, XL">
+        </div>
+        <button class="btn btn-primary btn-full" onclick="publishVendorProduct()">Publicar Producto 🚀</button>
+      </div>
+      <div>
+        <h2 style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;font-style:italic;margin-bottom:20px">Mis Productos</h2>
+        <div id="vendorProductsList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== DATA =====
+const PRODUCTS = [
+  {id:'1',name:'Camiseta Tempest Pro-Dark',price:140000,description:'Camiseta técnica de alto rendimiento diseñada para entrenamientos intensos. Tejido transpirable con tecnología de secado rápido y costuras planas que evitan rozaduras.',image:'https://i.postimg.cc/2yG3D47F/1cb8a0a8-759a-412a-a2a6-0aba22645f50.png',category:'Tops',gender:'Men',sizes:['S','M','L','XL'],gallery:['https://i.postimg.cc/2yG3D47F/1cb8a0a8-759a-412a-a2a6-0aba22645f50.png']},
+  {id:'2',name:'Hoodie Tempest Storm',price:260000,description:'Sudadera con capucha premium. Fabricada con una mezcla de algodón y poliéster para mantener la temperatura muscular durante el calentamiento.',image:'https://i.postimg.cc/rwJNDqfN/Chat-GPT-Image-20-feb-2026-09-01-35-p-m.png',category:'Outerwear',gender:'Men',sizes:['M','L','XL'],gallery:['https://i.postimg.cc/rwJNDqfN/Chat-GPT-Image-20-feb-2026-09-01-35-p-m.png','https://i.postimg.cc/Zqnp0p9V/Chat-GPT-Image-20-feb-2026-09-05-57-p-m.png']},
+  {id:'3',name:'Jogger Stealth Black',price:220000,description:'Pantalones deportivos ajustados con tecnología elástica de 4 vías. Bolsillos con cremallera termosellada para máxima seguridad y estilo agresivo.',image:'https://i.postimg.cc/25hc3dRw/Chat-GPT-Image-20-feb-2026-08-53-44-p-m.png',category:'Bottoms',gender:'Men',sizes:['S','M','L'],gallery:['https://i.postimg.cc/25hc3dRw/Chat-GPT-Image-20-feb-2026-08-53-44-p-m.png']},
+  {id:'4',name:'Camiseta Compresión Carbon',price:168000,description:'Camiseta de compresión de manga larga que mejora el flujo sanguíneo y reduce la fatiga muscular. Diseño aerodinámico en color negro mate.',image:'https://i.postimg.cc/136b2VRM/Chat-GPT-Image-20-feb-2026-09-18-23-p-m.png',category:'Compression',gender:'Men',sizes:['S','M','L','XL'],gallery:['https://i.postimg.cc/136b2VRM/Chat-GPT-Image-20-feb-2026-09-18-23-p-m.png']},
+  {id:'5',name:'Gorra Tempest Snapback',price:100000,description:'Accesorio imprescindible con el logo Tempest bordado en 3D. Visera plana y cierre ajustable para un estilo urbano y deportivo.',image:'https://i.postimg.cc/jj8V40Sz/Chat-GPT-Image-20-feb-2026-09-26-25-p-m.png',category:'Accessories',gender:'Unisex',sizes:['Unique'],gallery:['https://i.postimg.cc/jj8V40Sz/Chat-GPT-Image-20-feb-2026-09-26-25-p-m.png','https://i.postimg.cc/XqRQkx5k/Chat-GPT-Image-20-feb-2026-09-24-11-p-m.png']},
+  {id:'6',name:'Top Deportivo Wave - Mujer',price:128000,description:'Sujeción media para actividades de alto impacto. Tejido de doble capa que garantiza cobertura y soporte sin sacrificar la transpirabilidad.',image:'https://i.postimg.cc/ZqnsZ9Jy/Chat-GPT-Image-20-feb-2026-09-31-32-p-m.png',category:'Tops',gender:'Women',sizes:['XS','S','M','L'],gallery:['https://i.postimg.cc/ZqnsZ9Jy/Chat-GPT-Image-20-feb-2026-09-31-32-p-m.png','https://i.postimg.cc/DwyBdWJm/Chat-GPT-Image-20-feb-2026-09-34-11-p-m.png']},
+  {id:'7',name:'Leggings Tempest High-Waist',price:192000,description:'Leggings de cintura alta con efecto moldeador. Costuras reforzadas y tejido "squat-proof" diseñado para los entrenamientos más exigentes.',image:'https://i.postimg.cc/zv23sP7V/Chat-GPT-Image-20-feb-2026-09-45-53-p-m.png',category:'Bottoms',gender:'Women',sizes:['XS','S','M','L'],gallery:['https://i.postimg.cc/zv23sP7V/Chat-GPT-Image-20-feb-2026-09-45-53-p-m.png']},
+  {id:'8',name:'Chaqueta de Viento Tempest',price:340000,description:'Capa exterior ligera y resistente al viento. Ideal para entrenamientos al aire libre en condiciones climáticas adversas. Detalles reflectantes.',image:'https://i.postimg.cc/TwCPbHZr/Chat-GPT-Image-20-feb-2026-09-48-45-p-m.png',category:'Outerwear',gender:'Men',sizes:['S','M','L','XL'],gallery:['https://i.postimg.cc/TwCPbHZr/Chat-GPT-Image-20-feb-2026-09-48-45-p-m.png']},
+  {id:'9',name:'Compresión Silver Mist - Mujer',price:160000,description:'Camiseta de compresión ligera para mujer en gris perla. Proporciona soporte muscular localizado y una estética elegante y minimalista.',image:'https://i.postimg.cc/mrQfQh6S/Gemini-Generated-Image-9ogzx39ogzx39ogz.png',category:'Compression',gender:'Women',sizes:['XS','S','M'],gallery:['https://i.postimg.cc/mrQfQh6S/Gemini-Generated-Image-9ogzx39ogzx39ogz.png']},
+  {id:'10',name:'Pantalón Cargo Sport Stealth',price:240000,description:'Pantalones tipo cargo adaptados al deporte. Múltiples bolsillos tácticos y puños elásticos para un ajuste seguro durante el movimiento.',image:'https://i.postimg.cc/X7FRMr4P/Gemini-Generated-Image-6oc9746oc9746oc9.png',category:'Bottoms',gender:'Men',sizes:['M','L','XL'],gallery:['https://i.postimg.cc/X7FRMr4P/Gemini-Generated-Image-6oc9746oc9746oc9.png']},
+  {id:'11',name:'Hoodie Tempest Cloud - Mujer',price:260000,description:'Sudadera con capucha de corte cropped en gris suave. El equilibrio perfecto entre estilo agresivo y comodidad absoluta post-entrenamiento.',image:'https://i.postimg.cc/8zNnqwyZ/Gemini-Generated-Image-uwk5yluwk5yluwk5.png',category:'Outerwear',gender:'Women',sizes:['XS','S','M'],gallery:['https://i.postimg.cc/8zNnqwyZ/Gemini-Generated-Image-uwk5yluwk5yluwk5.png']},
+  {id:'12',name:'Mochila Táctica Tempest',price:300000,description:'Mochila de alta capacidad con sistema MOLLE para accesorios. Compartimentos especializados para ropa húmeda y equipamiento pesado.',image:'https://i.postimg.cc/XJS5z1L4/Gemini-Generated-Image-bz6bwxbz6bwxbz6b.png',category:'Accessories',gender:'Unisex',sizes:['Unique'],gallery:['https://i.postimg.cc/XJS5z1L4/Gemini-Generated-Image-bz6bwxbz6bwxbz6b.png']},
+  {id:'13',name:'Botella Tempest Steel Elite',price:112000,description:'Botella de acero inoxidable de doble pared con aislamiento térmico. Mantiene tus bebidas frías hasta 24 horas. Grabado láser del logo Tempest.',image:'https://i.postimg.cc/WzzcdgP0/e5e35b0a-707d-4d5a-89dd-f1f6f5cc463b.png',category:'Accessories',gender:'Unisex',sizes:['1L'],gallery:['https://i.postimg.cc/WzzcdgP0/e5e35b0a-707d-4d5a-89dd-f1f6f5cc463b.png']},
+  {id:'14',name:'Botella Hydro-Tempest Blue',price:88000,description:'Botella ergonómica de alto impacto con acabado traslúcido. Diseñada para una hidratación rápida durante sesiones de entrenamiento de alta intensidad.',image:'https://i.postimg.cc/HLdKJXwc/33b5db38-5bf5-445e-b5db-048ce8231681.png',category:'Accessories',gender:'Unisex',sizes:['750ml'],gallery:['https://i.postimg.cc/HLdKJXwc/33b5db38-5bf5-445e-b5db-048ce8231681.png']},
+  {id:'15',name:'Kit de Mancuernas Pro - Tempest Elite',price:500000,description:'Sistema versátil de entrenamiento de fuerza con agarre ergonómico antideslizante. Kit incluye discos intercambiables de hierro fundido con recubrimiento protector.',image:'https://i.postimg.cc/j5t2pDwV/Chat-GPT-Image-21-feb-2026-09-09-46-p-m.png',category:'Accessories',gender:'Unisex',sizes:['10kg','20kg','30kg'],gallery:['https://i.postimg.cc/j5t2pDwV/Chat-GPT-Image-21-feb-2026-09-09-46-p-m.png']}
+];
+
+// ===== STATE =====
+let currentPage = 'home';
+let currentProduct = null;
+let selectedSize = null;
+let selectedColor = null;
+let cart = [];
+let currentUser = null;
+let activePaymentMethod = 'tarjeta';
+let catalogGender = 'All';
+let catalogCategory = null;
+
+// ===== INIT =====
+function init(){
+  initDemoData();
+  const storedUser = localStorage.getItem('tempest_user');
+  if(storedUser){ currentUser = JSON.parse(storedUser); }
+  renderUserArea();
+  renderFeaturedProducts();
+  renderCatalog();
+  updateCartBadge();
+}
+
+function initDemoData(){
+  const existing = localStorage.getItem('tempest_users');
+  if(!existing || JSON.parse(existing).length === 0){
+    const users = [
+      {id:'demo-1',name:'Cliente Demo',email:'cliente@tempest.com',role:'cliente',createdAt:new Date().toISOString()},
+      {id:'demo-2',name:'Admin Tempest',email:'admin@tempest.com',role:'admin',createdAt:new Date().toISOString()},
+    ];
+    const passes = {'cliente@tempest.com':'tempest123','admin@tempest.com':'tempest123'};
+    localStorage.setItem('tempest_users',JSON.stringify(users));
+    localStorage.setItem('tempest_passwords',JSON.stringify(passes));
+  }
+}
+
+// ===== NAVIGATION =====
+function navigate(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l=>{
+    l.classList.toggle('active', l.dataset.page===page);
+  });
+  currentPage = page;
+  window.scrollTo(0,0);
+  if(page==='catalog') renderCatalog();
+  if(page==='cart') renderCart();
+  if(page==='orders') renderOrders();
+  if(page==='checkout') renderCheckout();
+  if(page==='admin'){ if(!currentUser||currentUser.role!=='admin'){toast('Acceso restringido','error');navigate('login');return;} adminSection('dashboard',null); }
+  if(page==='vendor'){ if(!currentUser){toast('Debes iniciar sesión','error');navigate('login');return;} renderVendorProducts(); }
+  if(page==='profile') loadProfile();
+  if(page==='support') loadSupportForm();
+  updateHeroBtn();
+}
+
+function updateHeroBtn(){
+  const btn = document.getElementById('heroSecondBtn');
+  if(!btn) return;
+  if(currentUser){
+    if(currentUser.role==='admin'){ btn.textContent='Panel Admin'; btn.onclick=()=>navigate('admin'); }
+    else{ btn.textContent='Mis Pedidos'; btn.onclick=()=>navigate('orders'); }
+  } else { btn.textContent='Crear Cuenta'; btn.onclick=()=>navigate('register'); }
+}
+
+// ===== TOAST =====
+function toast(msg, type='success'){
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(20px)';setTimeout(()=>t.remove(),300);}, 3000);
+}
+
+// ===== MOBILE =====
+function toggleMobile(){
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+// ===== USER AREA =====
+function renderUserArea(){
+  const area = document.getElementById('userArea');
+  const mobileLinks = document.getElementById('mobileUserLinks');
+  if(currentUser){
+    area.innerHTML = `
+      <button class="user-btn" onclick="toggleDropdown()">👤 <span style="max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${currentUser.name.split(' ')[0]}</span></button>
+      <div class="user-dropdown" id="userDropdown">
+        <div class="dropdown-header">
+          <div class="dropdown-name">${currentUser.name}</div>
+          <div class="dropdown-email">${currentUser.email}</div>
+          <div class="dropdown-role">${currentUser.role}</div>
+        </div>
+        <button class="dropdown-item" onclick="navigate('profile');closeDropdown()">👤 Mi Perfil</button>
+        ${currentUser.role==='admin'?`<button class="dropdown-item" onclick="navigate('admin');closeDropdown()">⚙️ Administración</button>`:''}
+        <button class="dropdown-item" onclick="navigate('orders');closeDropdown()">📦 Mis Pedidos</button>
+        <button class="dropdown-item danger" onclick="doLogout()">🚪 Cerrar Sesión</button>
+      </div>`;
+    mobileLinks.innerHTML = `
+      <div style="padding:14px 0 6px;border-top:1px solid var(--zinc-800)">
+        <div style="font-weight:700;font-size:13px;color:var(--white)">${currentUser.name}</div>
+        <div style="font-size:10px;color:var(--zinc-500);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:2px;text-transform:uppercase">${currentUser.role}</div>
+      </div>
+      <button class="mobile-link" onclick="navigate('profile');toggleMobile()">Mi Perfil</button>
+      ${currentUser.role==='admin'?`<button class="mobile-link" onclick="navigate('admin');toggleMobile()">Administración</button>`:''}
+      <button class="mobile-link" onclick="navigate('orders');toggleMobile()">Mis Pedidos</button>
+      <button class="mobile-link" style="color:var(--red)" onclick="doLogout()">Cerrar Sesión</button>`;
+  } else {
+    area.innerHTML = `<button class="user-btn" onclick="navigate('login')">👤 Ingresar</button>`;
+    mobileLinks.innerHTML = `
+      <button class="mobile-link" onclick="navigate('login');toggleMobile()">Iniciar Sesión</button>
+      <button class="mobile-link" onclick="navigate('register');toggleMobile()">Regístrate</button>`;
+  }
+}
+
+function toggleDropdown(){
+  document.getElementById('userDropdown')?.classList.toggle('open');
+}
+function closeDropdown(){
+  document.getElementById('userDropdown')?.classList.remove('open');
+}
+document.addEventListener('click', e=>{
+  if(!e.target.closest('#userArea')) closeDropdown();
+});
+
+// ===== AUTH =====
+function doLogin(){
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPassword').value;
+  if(!email||!pass){ toast('Completa todos los campos','error'); return; }
+  const users = JSON.parse(localStorage.getItem('tempest_users')||'[]');
+  const passes = JSON.parse(localStorage.getItem('tempest_passwords')||'{}');
+  const user = users.find(u=>u.email===email);
+  if(user && passes[email]===pass){
+    currentUser = user;
+    localStorage.setItem('tempest_user', JSON.stringify(user));
+    renderUserArea();
+    toast('¡Bienvenido de vuelta, '+user.name.split(' ')[0]+'!');
+    updateHeroBtn();
+    if(user.role==='admin') navigate('admin');
+    else navigate('home');
+  } else { toast('Credenciales incorrectas','error'); }
+}
+
+function doLogout(){
+  currentUser = null;
+  localStorage.removeItem('tempest_user');
+  renderUserArea();
+  toast('Sesión cerrada');
+  navigate('home');
+  closeDropdown();
+}
+
+function doRegister(){
+  const name = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass = document.getElementById('reg-password').value;
+  const role = document.getElementById('reg-role').value;
+  const phone = document.getElementById('reg-phone').value.trim();
+  const address = document.getElementById('reg-address').value.trim();
+  const adminPass = document.getElementById('reg-adminpass').value;
+  if(!name||!email||!pass){ toast('Completa los campos obligatorios','error'); return; }
+  if(pass.length<6){ toast('La contraseña debe tener mínimo 6 caracteres','error'); return; }
+  if(role==='admin' && adminPass!=='TempestAdmin2024!'){ toast('Contraseña de administrador incorrecta','error'); return; }
+  const users = JSON.parse(localStorage.getItem('tempest_users')||'[]');
+  if(users.find(u=>u.email===email)){ toast('El email ya está registrado','error'); return; }
+  const newUser = {id:Date.now().toString(),name,email,role,phone,address,createdAt:new Date().toISOString()};
+  users.push(newUser);
+  localStorage.setItem('tempest_users',JSON.stringify(users));
+  const passes = JSON.parse(localStorage.getItem('tempest_passwords')||'{}');
+  passes[email] = pass;
+  localStorage.setItem('tempest_passwords',JSON.stringify(passes));
+  currentUser = newUser;
+  localStorage.setItem('tempest_user',JSON.stringify(newUser));
+  renderUserArea();
+  toast('¡Registro exitoso! Bienvenido, '+name.split(' ')[0]+'!');
+  navigate('home');
+}
+
+function toggleAdminField(){
+  const role = document.getElementById('reg-role').value;
+  document.getElementById('adminPasswordField').style.display = role==='admin'?'block':'none';
+}
+
+function doForgotPassword(){
+  const email = document.getElementById('forgot-email').value.trim();
+  if(!email){ toast('Ingresa tu email','error'); return; }
+  const users = JSON.parse(localStorage.getItem('tempest_users')||'[]');
+  const found = users.find(u=>u.email===email);
+  const div = document.getElementById('forgotResult');
+  if(found){
+    div.innerHTML = `<div class="alert alert-success">✅ Instrucciones enviadas a <strong>${email}</strong>. Revisa tu bandeja de entrada.</div>`;
+    toast('Instrucciones enviadas');
+  } else {
+    div.innerHTML = `<div class="alert alert-error">❌ No encontramos una cuenta con ese email.</div>`;
+  }
+}
+
+// ===== PROFILE =====
+function loadProfile(){
+  if(!currentUser){ navigate('login'); return; }
+  document.getElementById('profile-name').value = currentUser.name||'';
+  document.getElementById('profile-email').value = currentUser.email||'';
+  document.getElementById('profile-phone').value = currentUser.phone||'';
+  document.getElementById('profile-address').value = currentUser.address||'';
+  document.getElementById('profile-role').value = currentUser.role||'';
+}
+
+function saveProfile(){
+  if(!currentUser) return;
+  const name = document.getElementById('profile-name').value.trim();
+  const phone = document.getElementById('profile-phone').value.trim();
+  const address = document.getElementById('profile-address').value.trim();
+  if(!name){ toast('El nombre es obligatorio','error'); return; }
+  currentUser = {...currentUser,name,phone,address};
+  localStorage.setItem('tempest_user',JSON.stringify(currentUser));
+  const users = JSON.parse(localStorage.getItem('tempest_users')||'[]');
+  const updated = users.map(u=>u.id===currentUser.id?currentUser:u);
+  localStorage.setItem('tempest_users',JSON.stringify(updated));
+  renderUserArea();
+  toast('Perfil actualizado');
+}
+
+// ===== PRODUCTS =====
+function getAllProducts(){
+  const vendorProducts = JSON.parse(localStorage.getItem('vendor_products')||'[]');
+  return [...PRODUCTS, ...vendorProducts];
+}
+
+function renderFeaturedProducts(){
+  const container = document.getElementById('featuredProducts');
+  container.innerHTML = PRODUCTS.slice(0,3).map(p=>productCardHTML(p)).join('');
+}
+
+function productCardHTML(p){
+  return `<div class="product-card" onclick="openProduct('${p.id}')">
+    <img src="${p.image}" alt="${p.name}" class="product-img" onerror="this.src='https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400'">
+    <div class="product-info">
+      <div class="product-cat">${p.category}</div>
+      <div class="product-name">${p.name}</div>
+      <div class="flex justify-between items-center">
+        <div class="product-price">$${p.price.toLocaleString('es-CO')}</div>
+        <div class="product-gender">${p.gender==='Men'?'Hombre':p.gender==='Women'?'Mujer':'Unisex'}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ===== CATALOG =====
+function renderCatalog(){
+  const all = getAllProducts();
+  const search = (document.getElementById('catalogSearch')?.value||'').toLowerCase();
+  const filtered = all.filter(p=>{
+    const matchSearch = !search || p.name.toLowerCase().includes(search)||p.category.toLowerCase().includes(search);
+    const matchGender = catalogGender==='All'||p.gender===catalogGender;
+    const matchCat = !catalogCategory||p.category===catalogCategory;
+    return matchSearch&&matchGender&&matchCat;
+  });
+
+  // Render gender filters
+  const genders = ['All','Men','Women','Unisex'];
+  const gEl = document.getElementById('genderFilters');
+  if(gEl) gEl.innerHTML = genders.map(g=>`
+    <button class="badge ${catalogGender===g?'badge-active':''}" onclick="setCatalogGender('${g}')">${g==='All'?'Todos':g==='Men'?'Hombre':g==='Women'?'Mujer':'Unisex'}</button>`).join('');
+
+  // Render category filters
+  const cats = Array.from(new Set(all.map(p=>p.category)));
+  const cEl = document.getElementById('categoryFilters');
+  if(cEl) cEl.innerHTML = `<button class="badge ${!catalogCategory?'badge-active':''}" onclick="setCatalogCategory(null)">Todas</button>`+
+    cats.map(c=>`<button class="badge ${catalogCategory===c?'badge-active':''}" onclick="setCatalogCategory('${c}')">${c}</button>`).join('');
+
+  const count = document.getElementById('productCount');
+  if(count) count.textContent = `[${filtered.length}] PRODUCTOS DISPONIBLES`;
+
+  const grid = document.getElementById('catalogGrid');
+  if(!grid) return;
+  if(filtered.length===0){
+    grid.innerHTML = `<div class="no-results" style="grid-column:1/-1"><div style="font-size:64px;opacity:.15;margin-bottom:16px">🔍</div>
+      <h3 style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:var(--zinc-400);margin-bottom:8px">Sin Resultados</h3>
+      <p class="text-muted" style="margin-bottom:20px">Intenta con otros filtros de búsqueda</p>
+      <button class="btn btn-primary btn-sm" onclick="resetCatalogFilters()">Reiniciar Búsqueda</button></div>`;
+  } else {
+    grid.innerHTML = filtered.map(p=>productCardHTML(p)).join('');
+  }
+}
+
+function filterProducts(){ renderCatalog(); }
+function setCatalogGender(g){ catalogGender=g; renderCatalog(); }
+function setCatalogCategory(c){ catalogCategory=c; renderCatalog(); }
+function resetCatalogFilters(){
+  catalogGender='All'; catalogCategory=null;
+  document.getElementById('catalogSearch').value='';
+  renderCatalog();
+}
+
+// ===== PRODUCT DETAIL =====
+function openProduct(id){
+  const all = getAllProducts();
+  currentProduct = all.find(p=>p.id===id);
+  if(!currentProduct) return;
+  selectedSize = null;
+  selectedColor = null;
+  navigate('product');
+  renderProductDetail();
+}
+
+function renderProductDetail(){
+  const p = currentProduct;
+  const container = document.getElementById('productDetailContent');
+  const colorsHTML = p.colors ? `
+    <div style="margin-bottom:20px">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--zinc-600);margin-bottom:10px">Color</div>
+      <div class="color-row" id="colorRow">
+        ${p.colors.map(c=>`<div class="color-dot" style="background:${c.value}" title="${c.name}" onclick="selectColor('${c.name}','${c.image}',this)"></div>`).join('')}
+      </div>
+    </div>` : '';
+  
+  const thumbsHTML = p.gallery.length > 1 ? `<div class="thumb-row">${p.gallery.map((img,i)=>`<img src="${img}" class="thumb ${i===0?'active':''}" onclick="switchMainImg('${img}',this)" onerror="this.style.display='none'">`).join('')}</div>` : '';
+
+  container.innerHTML = `
+    <div>
+      <img src="${p.image}" class="main-img" id="mainImg" onerror="this.src='https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600'">
+      ${thumbsHTML}
+    </div>
+    <div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:900;letter-spacing:4px;text-transform:uppercase;color:var(--zinc-600);margin-bottom:6px">${p.category} · ${p.gender==='Men'?'Hombre':p.gender==='Women'?'Mujer':'Unisex'}</div>
+      <h1 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,4vw,3rem);letter-spacing:2px;line-height:1;margin-bottom:16px">${p.name}</h1>
+      <div class="detail-price">$${p.price.toLocaleString('es-CO')}</div>
+      <p style="color:var(--zinc-400);line-height:1.7;font-size:14px;margin-bottom:24px">${p.description}</p>
+      ${colorsHTML}
+      <div style="margin-bottom:20px">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--zinc-600);margin-bottom:10px">Talla</div>
+        <div class="size-grid" id="sizeGrid">
+          ${p.sizes.map(s=>`<button class="size-btn" onclick="selectSize('${s}',this)">${s}</button>`).join('')}
+        </div>
+      </div>
+      <div id="sizeAlert" style="display:none" class="alert alert-error" style="margin-bottom:12px">Selecciona una talla</div>
+      <button class="btn btn-primary btn-full" onclick="addToCartFromDetail()" style="margin-bottom:12px;padding:16px">Agregar al Carrito 🛒</button>
+      <button class="btn btn-outline btn-full" onclick="navigate('catalog')">Seguir Explorando</button>
+      <div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--zinc-800)">
+        <div style="display:flex;gap:20px;flex-wrap:wrap">
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:900;letter-spacing:2px;color:var(--zinc-600);text-transform:uppercase">✓ Envío Gratis</span>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:900;letter-spacing:2px;color:var(--zinc-600);text-transform:uppercase">✓ Cambio Gratis</span>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:900;letter-spacing:2px;color:var(--zinc-600);text-transform:uppercase">✓ Garantía 30 días</span>
+        </div>
+      </div>
+    </div>`;
+}
+
+function switchMainImg(src, el){
+  document.getElementById('mainImg').src = src;
+  document.querySelectorAll('.thumb').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function selectSize(size, el){
+  selectedSize = size;
+  document.querySelectorAll('.size-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('sizeAlert').style.display='none';
+}
+
+function selectColor(name, img, el){
+  selectedColor = name;
+  document.querySelectorAll('.color-dot').forEach(d=>d.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('mainImg').src = img;
+}
+
+function addToCartFromDetail(){
+  if(!selectedSize){
+    document.getElementById('sizeAlert').style.display='block';
+    return;
+  }
+  addToCart(currentProduct, selectedSize, selectedColor);
+  toast(`${currentProduct.name} agregado al carrito ✓`);
+}
+
+// ===== CART =====
+function addToCart(product, size, color){
+  const existing = cart.find(i=>i.id===product.id&&i.selectedSize===size&&i.selectedColor===color);
+  if(existing){ existing.quantity++; }
+  else { cart.push({...product, selectedSize:size, selectedColor:color||null, quantity:1}); }
+  updateCartBadge();
+}
+
+function removeFromCart(id, size, color){
+  cart = cart.filter(i=>!(i.id===id&&i.selectedSize===size&&i.selectedColor===(color||null)));
+  updateCartBadge();
+  if(currentPage==='cart') renderCart();
+}
+
+function updateCartBadge(){
+  const total = cart.reduce((a,i)=>a+i.quantity,0);
+  const badge = document.getElementById('cartBadge');
+  badge.style.display = total>0?'flex':'none';
+  badge.textContent = total;
+}
+
+function getTotalPrice(){ return cart.reduce((a,i)=>a+(i.price*i.quantity),0); }
+function getTotalItems(){ return cart.reduce((a,i)=>a+i.quantity,0); }
+
+function renderCart(){
+  const container = document.getElementById('cartContent');
+  if(cart.length===0){
+    container.innerHTML=`<div class="empty-state">
+      <div class="empty-icon">🛒</div>
+      <h2 class="empty-title">Tu carrito está vacío</h2>
+      <p class="empty-sub">Aún no has añadido ningún producto al carrito.</p>
+      <button class="btn btn-primary" onclick="navigate('catalog')">Explorar Catálogo →</button>
+    </div>`;
+    return;
+  }
+  container.innerHTML = `<div style="display:grid;grid-template-columns:1fr 320px;gap:32px;align-items:start">
+    <div>${cart.map(item=>`
+      <div class="cart-item">
+        <img src="${item.selectedColor&&item.colors?item.colors.find(c=>c.name===item.selectedColor)?.image||item.image:item.image}"
+          class="cart-item-img" onerror="this.src='https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=200'">
+        <div style="flex:1">
+          <div class="flex justify-between items-start">
+            <div>
+              <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">${item.name}</div>
+              <div style="display:flex;gap:16px;flex-wrap:wrap">
+                <span style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--zinc-500)">Talla: <span style="color:var(--white)">${item.selectedSize}</span></span>
+                ${item.selectedColor?`<span style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--zinc-500)">Color: <span style="color:var(--white)">${item.selectedColor}</span></span>`:''}
+                <span style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--zinc-500)">Cant: <span style="color:var(--white)">${item.quantity}</span></span>
+              </div>
+            </div>
+            <span style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px">$${(item.price*item.quantity).toLocaleString('es-CO')}</span>
+          </div>
+          <div style="text-align:right;margin-top:12px">
+            <button onclick="removeFromCart('${item.id}','${item.selectedSize}',${item.selectedColor?`'${item.selectedColor}'`:'null'})" 
+              style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--zinc-600);background:none;border:none;cursor:pointer;transition:.2s"
+              onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--zinc-600)'">
+              Eliminar 🗑️
+            </button>
+          </div>
+        </div>
+      </div>`).join('')}
+    </div>
+    <div class="cart-summary">
+      <h3 style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;font-style:italic;margin-bottom:20px;border-bottom:1px solid var(--zinc-800);padding-bottom:14px">Resumen del Pedido</h3>
+      <div class="flex justify-between mb-2"><span class="text-muted text-xs">Productos (${getTotalItems()})</span><span style="font-family:'Barlow Condensed',sans-serif;font-weight:700">$${getTotalPrice().toLocaleString('es-CO')}</span></div>
+      <div class="flex justify-between mb-2"><span class="text-muted text-xs">Envío</span><span class="text-green text-xs">GRATIS</span></div>
+      <hr class="divider">
+      <div class="flex justify-between items-center mb-6">
+        <span style="font-family:'Bebas Neue',sans-serif;font-size:20px;font-style:italic">TOTAL</span>
+        <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px">$${getTotalPrice().toLocaleString('es-CO')}</span>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="${currentUser?'navigate(\'checkout\')':'navigate(\'login\')'}">
+        ${currentUser?'Finalizar Compra ✓':'Iniciar Sesión para Comprar'}
+      </button>
+    </div>
+  </div>`;
+}
+
+// ===== CHECKOUT =====
+function renderCheckout(){
+  if(!currentUser){ navigate('login'); return; }
+  if(cart.length===0){ navigate('cart'); return; }
+  document.getElementById('del-name').value = currentUser.name||'';
+  document.getElementById('del-phone').value = currentUser.phone||'';
+  document.getElementById('del-address').value = currentUser.address||'';
+  renderCheckoutSummary();
+}
+
+function renderCheckoutSummary(){
+  const s = document.getElementById('checkoutSummary');
+  if(!s) return;
+  s.innerHTML = cart.map(i=>`<div class="flex justify-between mb-2">
+    <span style="font-size:12px;color:var(--zinc-400);max-width:160px">${i.name} <span style="color:var(--zinc-600)">×${i.quantity}</span></span>
+    <span style="font-size:13px;font-weight:700">$${(i.price*i.quantity).toLocaleString('es-CO')}</span>
+  </div>`).join('');
+  const extra = activePaymentMethod==='contraentrega'?5000:0;
+  document.getElementById('checkoutTotal').textContent = '$'+(getTotalPrice()+extra).toLocaleString('es-CO');
+  document.getElementById('extraChargeRow').style.display = extra?'flex':'none';
+}
+
+function selectPayment(method, btn){
+  activePaymentMethod = method;
+  document.querySelectorAll('.payment-method-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.querySelectorAll('[id^="fields-"]').forEach(f=>f.style.display='none');
+  document.getElementById('fields-'+method).style.display='block';
+  renderCheckoutSummary();
+}
+
+function placeOrder(){
+  const name = document.getElementById('del-name').value.trim();
+  const city = document.getElementById('del-city').value.trim();
+  const address = document.getElementById('del-address').value.trim();
+  if(!name||!city||!address){ toast('Completa la información de entrega','error'); return; }
+  
+  const btn = document.getElementById('placeOrderBtn');
+  btn.disabled = true;
+  btn.textContent = 'Procesando...';
+  
+  setTimeout(()=>{
+    const extra = activePaymentMethod==='contraentrega'?5000:0;
+    const order = {
+      id: Date.now().toString(),
+      userId: currentUser.id,
+      items: [...cart],
+      total: getTotalPrice()+extra,
+      paymentMethod: activePaymentMethod,
+      deliveryInfo: {
+        name, city, address,
+        phone: document.getElementById('del-phone').value,
+        notes: document.getElementById('del-notes').value,
+      },
+      status: 'pendiente',
+      createdAt: new Date().toISOString(),
+    };
+    const orders = JSON.parse(localStorage.getItem('tempest_orders')||'[]');
+    orders.push(order);
+    localStorage.setItem('tempest_orders',JSON.stringify(orders));
+    cart = [];
+    updateCartBadge();
+    btn.disabled=false;
+    btn.textContent='Confirmar Pedido ✓';
+    document.getElementById('successOrderId').textContent = '#'+order.id;
+    toast('¡Pedido realizado con éxito! 🎉');
+    navigate('ordersuccess');
+  }, 1800);
+}
+
+// ===== ORDERS =====
+function renderOrders(){
+  const container = document.getElementById('ordersContent');
+  if(!currentUser){ container.innerHTML=`<div class="empty-state"><div class="empty-icon">🔐</div><h2 class="empty-title">Acceso Restringido</h2><p class="empty-sub">Debes iniciar sesión para ver tus pedidos</p><button class="btn btn-primary" onclick="navigate('login')">Iniciar Sesión</button></div>`; return; }
+  
+  const orders = JSON.parse(localStorage.getItem('tempest_orders')||'[]').filter(o=>o.userId===currentUser.id);
+  if(orders.length===0){ container.innerHTML=`<div class="empty-state"><div class="empty-icon">📦</div><h2 class="empty-title">Sin Pedidos</h2><p class="empty-sub">Aún no has realizado ningún pedido</p><button class="btn btn-primary" onclick="navigate('catalog')">Ir al Catálogo</button></div>`; return; }
+  
+  container.innerHTML = [...orders].reverse().map(o=>{
+    const statusClass = `status-${o.status}`;
+    return `<div class="card card-hover mb-4">
+      <div class="flex justify-between items-start" style="flex-wrap:wrap;gap:12px;margin-bottom:12px">
+        <div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:900;letter-spacing:2px;color:var(--zinc-600);text-transform:uppercase;margin-bottom:4px">#${o.id}</div>
+          <div style="font-size:13px;color:var(--zinc-400)">${new Date(o.createdAt).toLocaleDateString('es-CO',{year:'numeric',month:'long',day:'numeric'})}</div>
+        </div>
+        <div style="text-align:right">
+          <span class="status-badge ${statusClass}">${o.status.toUpperCase()}</span>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;margin-top:4px">$${o.total.toLocaleString('es-CO')}</div>
+        </div>
+      </div>
+      <div style="border-top:1px solid var(--zinc-800);padding-top:12px">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--zinc-600);margin-bottom:6px">${o.items.length} producto${o.items.length!==1?'s':''}</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          ${o.items.map(i=>`<div style="font-size:12px;color:var(--zinc-400)">${i.name} (×${i.quantity})</div>`).join('<span style="color:var(--zinc-700)">·</span>')}
+        </div>
+      </div>
+      <div style="border-top:1px solid var(--zinc-800);padding-top:12px;margin-top:12px;font-size:12px;color:var(--zinc-500)">
+        📍 ${o.deliveryInfo.address}, ${o.deliveryInfo.city} · 💳 ${o.paymentMethod.toUpperCase()}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===== SUPPORT =====
+function loadSupportForm(){
+  if(currentUser){
+    const n = document.getElementById('sup-name');
+    const e = document.getElementById('sup-email');
+    if(n) n.value = currentUser.name||'';
+    if(e) e.value = currentUser.email||'';
+  }
+}
+
+function sendSupportTicket(){
+  const name = document.getElementById('sup-name').value.trim();
+  const email = document.getElementById('sup-email').value.trim();
+  const subject = document.getElementById('sup-subject').value;
+  const msg = document.getElementById('sup-message').value.trim();
+  if(!name||!email||!subject||!msg){ toast('Completa todos los campos obligatorios','error'); return; }
+  
+  const ticket = {id:Date.now().toString(),userId:currentUser?.id||'guest',name,email,subject,message:msg,orderNumber:document.getElementById('sup-order').value,status:'abierto',createdAt:new Date().toISOString()};
+  const tickets = JSON.parse(localStorage.getItem('tempest_support_tickets')||'[]');
+  tickets.push(ticket);
+  localStorage.setItem('tempest_support_tickets',JSON.stringify(tickets));
+  
+  document.getElementById('supportFormArea').innerHTML = `<div style="text-align:center;padding:60px 20px;border:1px solid var(--zinc-800)">
+    <div style="width:70px;height:70px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px">✓</div>
+    <h3 style="font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;font-style:italic;margin-bottom:12px">¡Mensaje Enviado!</h3>
+    <p style="color:var(--zinc-500);font-size:13px;margin-bottom:24px">Hemos recibido tu solicitud. Nuestro equipo se pondrá en contacto contigo en las próximas 24 horas.</p>
+    <p style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--zinc-600);margin-bottom:20px">Ticket #${ticket.id}</p>
+    <button class="btn btn-outline" onclick="navigate('support')">Enviar Otro Mensaje</button>
+  </div>`;
+  toast('Ticket de soporte creado ✓');
+}
+
+// ===== VENDOR =====
+function publishVendorProduct(){
+  const name = document.getElementById('ven-name').value.trim();
+  const price = document.getElementById('ven-price').value;
+  const desc = document.getElementById('ven-desc').value.trim();
+  const image = document.getElementById('ven-image').value.trim();
+  const sizes = document.getElementById('ven-sizes').value.split(',').map(s=>s.trim()).filter(Boolean);
+  if(!name||!price||!desc||!image){ toast('Completa todos los campos','error'); return; }
+  if(!sizes.length){ toast('Ingresa al menos una talla','error'); return; }
+  
+  const p = {id:'vendor-'+Date.now(),name,price:parseInt(price),description:desc,image,
+    category:document.getElementById('ven-cat').value,gender:document.getElementById('ven-gender').value,
+    sizes,gallery:[image]};
+  const products = JSON.parse(localStorage.getItem('vendor_products')||'[]');
+  products.push(p);
+  localStorage.setItem('vendor_products',JSON.stringify(products));
+  
+  ['ven-name','ven-price','ven-desc','ven-image','ven-sizes'].forEach(id=>document.getElementById(id).value='');
+  toast('Producto publicado correctamente 🚀');
+  renderVendorProducts();
+}
+
+function renderVendorProducts(){
+  const products = JSON.parse(localStorage.getItem('vendor_products')||'[]');
+  const container = document.getElementById('vendorProductsList');
+  if(!container) return;
+  if(products.length===0){ container.innerHTML=`<div style="text-align:center;padding:40px;border:1px solid var(--zinc-800);color:var(--zinc-500);font-size:13px">No has publicado productos aún</div>`; return; }
+  container.innerHTML = products.map(p=>`<div class="card mb-4" style="display:flex;gap:12px;align-items:center">
+    <img src="${p.image}" style="width:60px;height:80px;object-fit:cover;background:var(--zinc-800)" onerror="this.src='https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120'">
+    <div style="flex:1">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:14px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">${p.name}</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:18px">$${p.price.toLocaleString('es-CO')}</div>
+      <div style="font-size:11px;color:var(--zinc-600);margin-top:2px">${p.category} · ${p.sizes.join(', ')}</div>
+    </div>
+    <button onclick="deleteVendorProduct('${p.id}')" class="btn btn-danger btn-sm">Eliminar</button>
+  </div>`).join('');
+}
+
+function deleteVendorProduct(id){
+  const products = JSON.parse(localStorage.getItem('vendor_products')||'[]').filter(p=>p.id!==id);
+  localStorage.setItem('vendor_products',JSON.stringify(products));
+  toast('Producto eliminado');
+  renderVendorProducts();
+}
+
+// ===== ADMIN =====
+function adminSection(section, btn){
+  if(btn){ document.querySelectorAll('.sidebar-item').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+  const content = document.getElementById('adminContent');
+  
+  if(section==='dashboard'){
+    const users = JSON.parse(localStorage.getItem('tempest_users')||'[]');
+    const orders = JSON.parse(localStorage.getItem('tempest_orders')||'[]');
+    const products = getAllProducts();
+    const tickets = JSON.parse(localStorage.getItem('tempest_support_tickets')||'[]');
+    const revenue = orders.reduce((a,o)=>a+o.total,0);
+    const pending = orders.filter(o=>o.status==='pendiente'||o.status==='procesando').length;
+    
+    content.innerHTML = `
+      <h1 style="font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;margin-bottom:24px">Dashboard</h1>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-val">${users.length}</div><div class="stat-label">👥 Usuarios</div></div>
+        <div class="stat-card"><div class="stat-val">${orders.length}</div><div class="stat-label">📦 Pedidos</div></div>
+        <div class="stat-card"><div class="stat-val" style="font-size:24px">$${revenue.toLocaleString('es-CO')}</div><div class="stat-label">💰 Ingresos</div></div>
+        <div class="stat-card"><div class="stat-val">${products.length}</div><div class="stat-label">👕 Productos</div></div>
+        <div class="stat-card"><div class="stat-val text-yellow">${pending}</div><div class="stat-label">⏳ Pedidos Pendientes</div></div>
+        <div class="stat-card"><div class="stat-val">${tickets.filter(t=>t.status==='abierto').length}</div><div class="stat-label">🎫 Tickets Abiertos</div></div>
+      </div>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;margin-bottom:16px">Pedidos Recientes</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Usuario</th><th>Total</th><th>Pago</th><th>Estado</th><th>Fecha</th></tr></thead>
+          <tbody>${[...orders].reverse().slice(0,8).map(o=>`<tr>
+            <td style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--zinc-500)">#${o.id.slice(-6)}</td>
+            <td>${o.deliveryInfo?.name||'N/A'}</td>
+            <td style="font-family:'Bebas Neue',sans-serif;font-size:16px">$${o.total.toLocaleString('es-CO')}</td>
+            <td><span class="text-xs" style="color:var(--zinc-400)">${o.paymentMethod?.toUpperCase()}</span></td>
+            <td><span class="status-badge status-${o.status}">${o.status.toUpperCase()}</span></td>
+            <td style="color:var(--zinc-500);font-size:11px">${new Date(o.createdAt).toLocaleDateString('es-CO')}</td>
+          </tr>`).join('')}</tbody>
+        </table>
+      </div>`;
+  }
+  
+  else if(section==='products'){
+    const products = getAllProducts();
+    content.innerHTML = `
+      <div class="flex justify-between items-center mb-6" style="flex-wrap:wrap;gap:12px">
+        <h1 style="font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px">Productos (${products.length})</h1>
+        <button class="btn btn-primary btn-sm" onclick="adminSection('add-product',null)">+ Agregar Producto</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Imagen</th><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Tallas</th><th>Acciones</th></tr></thead>
+          <tbody>${products.map(p=>`<tr>
+            <td><img src="${p.image}" style="width:48px;height:60px;object-fit:cover;background:var(--zinc-800)" onerror="this.style.display='none'"></td>
+            <td style="font-weight:700;max-width:200px">${p.name}</td>
+            <td><span class="text-xs" style="color:var(--zinc-400)">${p.category}</span></td>
+            <td style="font-family:'Bebas Neue',sans-serif;font-size:16px">$${p.price.toLocaleString('es-CO')}</td>
+            <td style="font-size:11px;color:var(--zinc-500)">${p.sizes.join(', ')}</td>
+            <td>
+              <button class="btn btn-sm" style="background:var(--zinc-800);color:var(--white);padding:6px 12px;font-size:9px" onclick="openProduct('${p.id}')">Ver</button>
+              ${p.id.startsWith('admin-')||p.id.startsWith('vendor-')?`<button class="btn btn-danger btn-sm" onclick="adminDeleteProduct('${p.id}')" style="margin-left:4px">Eliminar</button>`:''}
+            </td>
+          </tr>`).join('')}</tbody>
+        </table>
+      </div>`;
+  }
+  
+  else if(section==='add-product'){
+    content.innerHTML = `
+      <h1 style="font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;margin-bottom:24px">Agregar Producto</h1>
+      <div class="card" style="max-width:640px">
+        <div class="form-group"><label class="label">Nombre del Producto *</label><input type="text" class="input" id="adm-name" placeholder="Camiseta Pro..."></div>
+        <div class="grid-2">
+          <div class="form-group"><label class="label">Precio (COP) *</label><input type="number" class="input" id="adm-price" placeholder="150000"></div>
+          <div class="form-group"><label class="label">Stock</label><input type="number" class="input" id="adm-stock" placeholder="100" value="100"></div>
+        </div>
+        <div class="form-group"><label class="label">Descripción *</label><textarea class="textarea" id="adm-desc" placeholder="Describe el producto..."></textarea></div>
+        <div class="form-group"><label class="label">URL de Imagen *</label><input type="url" class="input" id="adm-image" placeholder="https://..."></div>
+        <div class="grid-2">
+          <div class="form-group"><label class="label">Categoría</label>
+            <select class="select" id="adm-cat"><option>Tops</option><option>Bottoms</option><option>Accessories</option><option>Compression</option><option>Outerwear</option></select>
+          </div>
+          <div class="form-group"><label class="label">Género</label>
+            <select class="select" id="adm-gender"><option>Men</option><option>Women</option><option>Unisex</option></select>
+          </div>
+        </div>
+        <div class="form-group"><label class="label">Tallas (separadas por coma)</label><input type="text" class="input" id="adm-sizes" placeholder="S, M, L, XL" value="S, M, L, XL"></div>
+        <button class="btn btn-primary" onclick="adminAddProduct()">Agregar Producto</button>
+      </div>`;
+  }
+  
+  else if(section==='orders'){
+    const orders = JSON.parse(localStorage.getItem('tempest_orders')||'[]');
+    content.innerHTML = `
+      <h1 style="font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;margin-bottom:24px">Todos los Pedidos (${orders.length})</h1>
+      ${orders.length===0?`<div class="empty-state"><div class="empty-icon">📦</div><h2 class="empty-title">Sin Pedidos</h2></div>`:`
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Cliente</th><th>Productos</th><th>Total</th><th>Pago</th><th>Estado</th><th>Actualizar</th></tr></thead>
+          <tbody>${[...orders].reverse().map(o=>`<tr>
+            <td style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--zinc-500)">#${o.id.slice(-6)}</td>
+            <td><div style="font-weight:700;font-size:13px">${o.deliveryInfo?.name||'N/A'}</div><div style="font-size:11px;color:var(--zinc-500)">${o.deliveryInfo?.city||''}</div></td>
+            <td style="font-size:11px;color:var(--zinc-400);max-width:150px">${o.items.map(i=>i.name).join(', ')}</td>
+            <td style="font-family:'Bebas Neue',sans-serif;font-size:16px">$${o.total.toLocaleString('es-CO')}</td>
+            <td><span class="text-xs" style="color:var(--zinc-400)">${o.paymentMethod?.toUpperCase()}</span></td>
+            <td><span class="status-badge status-${o.status}">${o.status.toUpperCase()}</span></td>
+            <td>
+              <select onchange="updateOrderStatus('${o.id}',this.value)" style="background:var(--zinc-800);border:1px solid var(--zinc-700);color:var(--white);padding:4px 8px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:900;letter-spacing:1px;text-transform:uppercase;cursor:pointer">
+                ${['pendiente','procesando','enviado','entregado','cancelado'].map(s=>`<option value="${s}" ${o.status===s?'selected':''}>${s.toUpperCase()}</option>`).join('')}
+              </select>
+            </td>
+          </tr>`).join('')}</tbody>
+        </table>
+      </div>`}`;
+  }
+  
+  else if(section==='users'){
+    const users = JSON.parse(localStorage.getItem('tempest_users')||'[]');
+    content.innerHTML = `
+      <h1 style="font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;margin-bottom:24px">Usuarios (${users.length})</h1>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Teléfono</th><th>Registrado</th></tr></thead>
+          <tbody>${users.map(u=>`<tr>
+            <td style="font-weight:700">${u.name}</td>
+            <td style="color:var(--zinc-400);font-size:13px">${u.email}</td>
+            <td><span class="badge ${u.role==='admin'?'badge-active':''}">${u.role.toUpperCase()}</span></td>
+            <td style="color:var(--zinc-500);font-size:12px">${u.phone||'—'}</td>
+            <td style="color:var(--zinc-500);font-size:11px">${new Date(u.createdAt).toLocaleDateString('es-CO')}</td>
+          </tr>`).join('')}</tbody>
+        </table>
+      </div>`;
+  }
+  
+  else if(section==='tickets'){
+    const tickets = JSON.parse(localStorage.getItem('tempest_support_tickets')||'[]');
+    content.innerHTML = `
+      <h1 style="font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;margin-bottom:24px">Tickets de Soporte (${tickets.length})</h1>
+      ${tickets.length===0?`<div class="empty-state"><div class="empty-icon">🎫</div><h2 class="empty-title">Sin Tickets</h2></div>`:`
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Nombre</th><th>Asunto</th><th>Mensaje</th><th>Estado</th><th>Fecha</th></tr></thead>
+          <tbody>${[...tickets].reverse().map(t=>`<tr>
+            <td style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--zinc-500)">#${t.id.slice(-6)}</td>
+            <td><div style="font-weight:700;font-size:13px">${t.name}</div><div style="font-size:11px;color:var(--zinc-500)">${t.email}</div></td>
+            <td style="font-size:12px;color:var(--zinc-300)">${t.subject}</td>
+            <td style="font-size:11px;color:var(--zinc-400);max-width:200px">${t.message.substring(0,60)}...</td>
+            <td><span class="status-badge ${t.status==='abierto'?'status-pendiente':'status-entregado'}">${t.status.toUpperCase()}</span></td>
+            <td style="color:var(--zinc-500);font-size:11px">${new Date(t.createdAt).toLocaleDateString('es-CO')}</td>
+          </tr>`).join('')}</tbody>
+        </table>
+      </div>`}`;
+  }
+}
+
+function adminAddProduct(){
+  const name = document.getElementById('adm-name').value.trim();
+  const price = document.getElementById('adm-price').value;
+  const desc = document.getElementById('adm-desc').value.trim();
+  const image = document.getElementById('adm-image').value.trim();
+  const sizes = document.getElementById('adm-sizes').value.split(',').map(s=>s.trim()).filter(Boolean);
+  if(!name||!price||!desc||!image){ toast('Completa los campos obligatorios','error'); return; }
+  
+  const p = {id:'admin-'+Date.now(),name,price:parseInt(price),description:desc,image,
+    category:document.getElementById('adm-cat').value,
+    gender:document.getElementById('adm-gender').value,
+    sizes:sizes.length?sizes:['S','M','L'],gallery:[image]};
+  const products = JSON.parse(localStorage.getItem('vendor_products')||'[]');
+  products.push(p);
+  localStorage.setItem('vendor_products',JSON.stringify(products));
+  toast('Producto agregado ✓');
+  adminSection('products', null);
+  document.querySelectorAll('.sidebar-item').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item')[1].classList.add('active');
+}
+
+function adminDeleteProduct(id){
+  const products = JSON.parse(localStorage.getItem('vendor_products')||'[]').filter(p=>p.id!==id);
+  localStorage.setItem('vendor_products',JSON.stringify(products));
+  toast('Producto eliminado');
+  adminSection('products',null);
+}
+
+function updateOrderStatus(orderId, newStatus){
+  const orders = JSON.parse(localStorage.getItem('tempest_orders')||'[]');
+  const updated = orders.map(o=>o.id===orderId?{...o,status:newStatus}:o);
+  localStorage.setItem('tempest_orders',JSON.stringify(updated));
+  toast(`Pedido actualizado: ${newStatus.toUpperCase()}`);
+}
+
+// ===== START =====
+init();
+</script>
+</body>
+</html>

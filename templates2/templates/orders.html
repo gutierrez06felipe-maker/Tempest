@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Pedidos | Tempest Commerce{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="section-head">
+        <div>
+            <div class="section-label">historial</div>
+            <h2 class="section-title">Tus Pedidos</h2>
+        </div>
+    </div>
+    <div class="stack">
+        {% for order in orders %}
+            <div class="table-card">
+                <div class="meta" style="margin-bottom:16px;">
+                    <div class="product-name">Pedido #{{ order.id }}</div>
+                    <div class="section-label" style="margin-bottom:0;">{{ order.status }}</div>
+                </div>
+                <p style="margin-bottom:18px;">{{ order.total|currency }} · {{ order.created_at.strftime("%Y-%m-%d %H:%M") }}</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio unitario</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.items %}
+                            <tr>
+                                <td>{{ item.product.name }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ item.unit_price|currency }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="panel">
+                <div class="product-name">Aun no hay pedidos</div>
+                <p>Cuando completes una compra aparecera aqui tu historial.</p>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

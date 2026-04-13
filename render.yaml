@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: tempest-commerce
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT templates2.mientorno:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_EMAIL
+        value: admin@tempest.app
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tempest-db
+          property: connectionString
+
+databases:
+  - name: tempest-db
+    plan: free
