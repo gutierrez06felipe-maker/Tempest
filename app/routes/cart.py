@@ -5,6 +5,7 @@ from __future__ import annotations
 from decimal import Decimal
 
 from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
+from sqlalchemy.exc import SQLAlchemyError
 
 from app.models.models import CartItem, Order, OrderItem
 from app.services.logic import (
@@ -39,101 +40,122 @@ def _login_page_redirect(target_endpoint: str):
 
 def _add_to_cart(data) -> tuple[bool, str]:
     """Agrega o acumula items en el carrito."""
-    product_id = str(data.get("productId") or data.get("product_id") or "").strip()
-    selected_size = (data.get("selectedSize") or data.get("size") or "M").strip()
-    selected_color = (data.get("selectedColor") or data.get("color") or "").strip()
-    quantity = max(1, _safe_int(data.get("quantity") or data.get("qty") or 1, default=1))
+    try:
+        product_id = str(data.get("productId") or data.get("product_id") or "").strip()
+        selected_size = (data.get("selectedSize") or data.get("size") or "M").strip()
+        selected_color = (data.get("selectedColor") or data.get("color") or "").strip()
+        quantity = max(1, _safe_int(data.get("quantity") or data.get("qty") or 1, default=1))
 
-    product = find_product_by_public_id(g.db, product_id)
-    if not product:
-        return False, "Producto no encontrado."
+        product = find_product_by_public_id(g.db, product_id)
+        if not product:
+            return False, "Producto no encontrado."
 
-    item = (
-        g.db.query(CartItem)
-        .filter_by(
-            user_id=g.user.id,
-            product_id=product.id,
-            selected_size=selected_size,
-            selected_color=selected_color,
-        )
-        .first()
-    )
-    if item:
-        item.quantity += quantity
-    else:
-        g.db.add(
-            CartItem(
+        item = (
+            g.db.query(CartItem)
+            .filter_by(
                 user_id=g.user.id,
                 product_id=product.id,
-                quantity=quantity,
                 selected_size=selected_size,
                 selected_color=selected_color,
             )
+            .first()
         )
-    g.db.commit()
-    return True, "Producto agregado al carrito."
+        if item:
+            item.quantity += quantity
+        else:
+            g.db.add(
+                CartItem(
+                    user_id=g.user.id,
+                    product_id=product.id,
+                    quantity=quantity,
+                    selected_size=selected_size,
+                    selected_color=selected_color,
+                )
+            )
+        g.db.commit()
+        return True, "Producto agregado al carrito."
+    except SQLAlchemyError:
+        g.db.rollback()
+        return False, "No fue posible actualizar el carrito."
+    except Exception:
+        g.db.rollback()
+        return False, "Ocurrio un error inesperado al agregar el producto."
 
 
 def _remove_from_cart(data) -> tuple[bool, str]:
     """Elimina un item puntual del carrito."""
-    product_id = str(data.get("productId") or data.get("product_id") or "").strip()
-    selected_size = (data.get("selectedSize") or data.get("size") or "M").strip()
-    selected_color = (data.get("selectedColor") or data.get("color") or "").strip()
+    try:
+        product_id = str(data.get("productId") or data.get("product_id") or "").strip()
+        selected_size = (data.get("selectedSize") or data.get("size") or "M").strip()
+        selected_color = (data.get("selectedColor") or data.get("color") or "").strip()
 
-    product = find_product_by_public_id(g.db, product_id)
-    if not product:
-        return False, "Producto no encontrado en el carrito."
+        product = find_product_by_public_id(g.db, product_id)
+        if not product:
+            return False, "Producto no encontrado en el carrito."
 
-    item = (
-        g.db.query(CartItem)
-        .filter_by(
-            user_id=g.user.id,
-            product_id=product.id,
-            selected_size=selected_size,
-            selected_color=selected_color,
+        item = (
+            g.db.query(CartItem)
+            .filter_by(
+                user_id=g.user.id,
+                product_id=product.id,
+                selected_size=selected_size,
+                selected_color=selected_color,
+            )
+            .first()
         )
-        .first()
-    )
-    if not item:
-        return False, "Producto no encontrado en el carrito."
+        if not item:
+            return False, "Producto no encontrado en el carrito."
 
-    g.db.delete(item)
-    g.db.commit()
-    return True, "Producto eliminado del carrito."
+        g.db.delete(item)
+        g.db.commit()
+        return True, "Producto eliminado del carrito."
+    except SQLAlchemyError:
+        g.db.rollback()
+        return False, "No fue posible actualizar el carrito."
+    except Exception:
+        g.db.rollback()
+        return False, "Ocurrio un error inesperado al eliminar el item."
 
 
 def _update_cart_item(data) -> tuple[bool, str]:
     """Actualiza la cantidad o elimina el item si queda en cero."""
-    product_id = str(data.get("productId") or data.get("product_id") or "").strip()
-    selected_size = (data.get("selectedSize") or data.get("size") or "M").strip()
-    selected_color = (data.get("selectedColor") or data.get("color") or "").strip()
-    quantity = max(0, _safe_int(data.get("quantity") or data.get("qty") or 1, default=1))
+    try:
+        product_id = str(data.get("productId") or data.get("product_id") or "").strip()
+        selected_size = (data.get("selectedSize") or data.get("size") or "M").strip()
+        selected_color = (data.get("selectedColor") or data.get("color") or "").strip()
+        quantity = max(0, _safe_int(data.get("quantity") or data.get("qty") or 1, default=1))
 
-    product = find_product_by_public_id(g.db, product_id)
-    if not product:
-        return False, "Producto no encontrado."
+        product = find_product_by_public_id(g.db, product_id)
+        if not product:
+            return False, "Producto no encontrado."
 
-    item = (
-        g.db.query(CartItem)
-        .filter_by(
-            user_id=g.user.id,
-            product_id=product.id,
-            selected_size=selected_size,
-            selected_color=selected_color,
+        item = (
+            g.db.query(CartItem)
+            .filter_by(
+                user_id=g.user.id,
+                product_id=product.id,
+                selected_size=selected_size,
+                selected_color=selected_color,
+            )
+            .first()
         )
-        .first()
-    )
-    if not item:
-        return False, "Item no encontrado en el carrito."
+        if not item:
+            return False, "Item no encontrado en el carrito."
 
-    if quantity == 0:
-        g.db.delete(item)
+        if quantity == 0:
+            g.db.delete(item)
+            g.db.commit()
+            return True, "Producto eliminado del carrito."
+
+        item.quantity = quantity
         g.db.commit()
-        return True, "Producto eliminado del carrito."
-
-    item.quantity = quantity
-    g.db.commit()
-    return True, "Cantidad actualizada."
+        return True, "Cantidad actualizada."
+    except SQLAlchemyError:
+        g.db.rollback()
+        return False, "No fue posible actualizar la cantidad."
+    except Exception:
+        g.db.rollback()
+        return False, "Ocurrio un error inesperado al actualizar el carrito."
 
 
 def _validate_checkout_form(data, cart_items: list[dict]) -> list[str]:
@@ -176,47 +198,61 @@ def _validate_checkout_form(data, cart_items: list[dict]) -> list[str]:
 
 def _create_order(data) -> tuple[list[str], dict | None]:
     """Convierte carrito actual en pedido persistente."""
-    cart_items = cart_items_for_user(g.db, g.user)
-    errors = _validate_checkout_form(data, cart_items)
-    if errors:
-        return errors, None
+    try:
+        cart_items = cart_items_for_user(g.db, g.user)
+        errors = _validate_checkout_form(data, cart_items)
+        if errors:
+            return errors, None
 
-    db_items = g.db.query(CartItem).filter_by(user_id=g.user.id).order_by(CartItem.id.asc()).all()
-    total = sum((item.product.price * item.quantity for item in db_items), Decimal("0"))
-    payment_method = (data.get("payment") or data.get("paymentMethod") or "tarjeta").strip().lower()
+        db_items = g.db.query(CartItem).filter_by(user_id=g.user.id).order_by(CartItem.id.asc()).all()
+        missing_products = [item for item in db_items if item.product is None]
+        if missing_products:
+            for item in missing_products:
+                g.db.delete(item)
+            g.db.commit()
+            return ["Algunos productos de tu carrito ya no estan disponibles. Revisa tu carrito e intenta nuevamente."], None
 
-    order = Order(
-        user_id=g.user.id,
-        status="pendiente",
-        total=total,
-        payment_method=payment_method,
-        delivery_name=(data.get("name") or "").strip(),
-        delivery_city=(data.get("city") or "").strip(),
-        delivery_address=(data.get("address") or "").strip(),
-    )
-    g.db.add(order)
-    g.db.flush()
+        total = sum((item.product.price * item.quantity for item in db_items), Decimal("0"))
+        payment_method = (data.get("payment") or data.get("paymentMethod") or "tarjeta").strip().lower()
 
-    for item in db_items:
-        g.db.add(
-            OrderItem(
-                order_id=order.id,
-                product_id=item.product_id,
-                quantity=item.quantity,
-                unit_price=item.product.price,
-                selected_size=item.selected_size,
-                selected_color=item.selected_color,
-            )
+        order = Order(
+            user_id=g.user.id,
+            status="pendiente",
+            total=total,
+            payment_method=payment_method,
+            delivery_name=(data.get("name") or "").strip(),
+            delivery_city=(data.get("city") or "").strip(),
+            delivery_address=(data.get("address") or "").strip(),
         )
-        g.db.delete(item)
+        g.db.add(order)
+        g.db.flush()
 
-    g.user.name = (data.get("name") or "").strip() or g.user.name
-    g.user.phone = (data.get("phone") or "").strip() or g.user.phone
-    g.user.address = (data.get("address") or "").strip() or g.user.address
-    g.db.commit()
+        for item in db_items:
+            g.db.add(
+                OrderItem(
+                    order_id=order.id,
+                    product_id=item.product_id,
+                    quantity=item.quantity,
+                    unit_price=item.product.price,
+                    selected_size=item.selected_size,
+                    selected_color=item.selected_color,
+                )
+            )
+            g.db.delete(item)
 
-    session["last_order_id"] = order.id
-    return [], order_payload(order)
+        g.user.name = (data.get("name") or "").strip() or g.user.name
+        g.user.phone = (data.get("phone") or "").strip() or g.user.phone
+        g.user.address = (data.get("address") or "").strip() or g.user.address
+        g.db.commit()
+
+        session["last_order_id"] = order.id
+        return [], order_payload(order)
+    except SQLAlchemyError:
+        g.db.rollback()
+        return ["No fue posible procesar el pedido en este momento."], None
+    except Exception:
+        g.db.rollback()
+        return ["Ocurrio un error inesperado al confirmar el pedido."], None
 
 
 @bp.get("/cart")

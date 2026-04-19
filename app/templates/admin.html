@@ -80,9 +80,9 @@
 
     {# ── Tabs ───────────────────────────────────────────────── #}
     <div class="admin-tabs">
-      <button class="admin-tab active" data-panel="panel-products">PRODUCTOS</button>
-      <button class="admin-tab"        data-panel="panel-orders">PEDIDOS</button>
-      <button class="admin-tab"        data-panel="panel-users">USUARIOS</button>
+      <button type="button" class="admin-tab active" data-panel="panel-products">PRODUCTOS</button>
+      <button type="button" class="admin-tab" data-panel="panel-orders">PEDIDOS</button>
+      <button type="button" class="admin-tab" data-panel="panel-users">USUARIOS</button>
     </div>
 
     {# ── Products Panel ─────────────────────────────────────── #}
@@ -117,7 +117,7 @@
                         letter-spacing:.08em;text-transform:uppercase;color:#888;transition:color .2s;"
                  onmouseover="this.style.color='white'" onmouseout="this.style.color='#888'">VER →</a>
               {% if not p.get('is_seed', True) %}
-              <form method="post" action="{{ url_for('products.admin_delete_product_page', product_id=p.get('id', '')) }}" style="display:inline;">
+              <form method="post" action="{{ url_for('products.admin_delete_product_page', product_id=p.get('source_id', p.get('id'))) }}" style="display:inline;">
                 <button type="submit" style="margin-left:8px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:#ff6b6b;">ELIMINAR</button>
               </form>
               {% endif %}

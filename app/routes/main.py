@@ -90,7 +90,11 @@ def order_success_page():
     order = None
 
     if last_order_id:
-        order = g.db.get(Order, int(last_order_id))
+        try:
+            order = g.db.get(Order, int(last_order_id))
+        except (TypeError, ValueError):
+            session.pop("last_order_id", None)
+            order = None
         if order and g.user and order.user_id != g.user.id and getattr(g.user, "role", "client") != "admin":
             order = None
 

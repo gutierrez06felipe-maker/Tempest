@@ -12,7 +12,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from flask import Flask, g, session
+from flask import Flask, flash, g, jsonify, redirect, request, session, url_for
+from sqlalchemy.exc import SQLAlchemyError
+from werkzeug.exceptions import HTTPException
 
 from app.config import Config
 from app.models import CartItem, User, db
@@ -75,6 +77,15 @@ def create_app() -> Flask:
                 session.pop("user", None)
                 session.pop("user_email", None)
 
+    @app.teardown_request
+    def cleanup_request_context(error=None):
+        """Revierte transacciones pendientes cuando ocurre un error en la request."""
+        if error:
+            db.session.rollback()
+
+    def wants_json_response() -> bool:
+        return request.path.startswith("/api/")
+
     @app.template_filter("fmt_price")
     @app.template_filter("currency")
     def price_filter(value):
@@ -93,6 +104,38 @@ def create_app() -> Flask:
             "get_cart_count": lambda: cart_count,
             "session_user": current_user,
         }
+
+    @app.errorhandler(404)
+    def handle_not_found(error):
+        """Evita paginas genericas para rutas inexistentes."""
+        if wants_json_response():
+            return jsonify({"ok": False, "message": "La ruta solicitada no existe."}), 404
+        flash("La pagina solicitada no existe.", "warning")
+        return redirect(request.referrer or url_for("main.home"))
+
+    @app.errorhandler(SQLAlchemyError)
+    def handle_database_error(error):
+        """Responde de forma controlada ante errores de base de datos."""
+        db.session.rollback()
+        if wants_json_response():
+            return jsonify({"ok": False, "message": "Ocurrio un problema con la base de datos."}), 500
+        flash("Ocurrio un problema temporal con la base de datos. Intenta nuevamente.", "danger")
+        return redirect(request.referrer or url_for("main.home"))
+
+    @app.errorhandler(Exception)
+    def handle_unexpected_error(error):
+        """Evita errores 500 genericos en vistas HTML y API."""
+        if isinstance(error, HTTPException):
+            if wants_json_response():
+                return jsonify({"ok": False, "message": error.description}), error.code
+            flash(error.description, "warning")
+            return redirect(request.referrer or url_for("main.home"))
+
+        db.session.rollback()
+        if wants_json_response():
+            return jsonify({"ok": False, "message": "Ocurrio un error inesperado."}), 500
+        flash("Ocurrio un error inesperado. Intenta nuevamente.", "danger")
+        return redirect(request.referrer or url_for("main.home"))
 
     for bp in ALL_BLUEPRINTS:
         app.register_blueprint(bp)

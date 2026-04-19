@@ -58,7 +58,7 @@ class Product(db.Model):
     colors_csv: Mapped[str] = mapped_column(String(255), default="", nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
 
-    cart_items: Mapped[list["CartItem"]] = relationship(back_populates="product")
+    cart_items: Mapped[list["CartItem"]] = relationship(back_populates="product", cascade="all, delete-orphan")
     order_items: Mapped[list["OrderItem"]] = relationship(back_populates="product")
 
 

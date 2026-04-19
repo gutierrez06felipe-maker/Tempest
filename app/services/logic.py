@@ -11,6 +11,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 from flask import g, jsonify
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import inspect, text
 from werkzeug.security import generate_password_hash
 
@@ -269,6 +270,7 @@ def product_payload(product: Product) -> dict:
             colors.append({"name": name, "hex": hex_color})
     return {
         "id": product_public_id(product),
+        "source_id": product.source_id or str(product.id),
         "db_id": product.id,
         "name": product.name,
         "price": float(product.price),
@@ -287,6 +289,33 @@ def product_payload(product: Product) -> dict:
 
 
 def cart_item_payload(item: CartItem) -> dict:
+    if not item.product:
+        return {
+            "id": str(item.product_id),
+            "source_id": str(item.product_id),
+            "db_id": item.product_id,
+            "itemId": item.id,
+            "product_id": str(item.product_id),
+            "name": "Producto no disponible",
+            "price": 0.0,
+            "image": "",
+            "description": "",
+            "category": "Catalogo",
+            "gender": "Unisex",
+            "sizes": [item.selected_size or "M"],
+            "gallery": [],
+            "colors": [],
+            "badge": "",
+            "features": [],
+            "color": item.selected_color or "Negro",
+            "is_seed": False,
+            "quantity": item.quantity,
+            "qty": item.quantity,
+            "size": item.selected_size,
+            "selectedSize": item.selected_size,
+            "selectedColor": item.selected_color or None,
+        }
+
     payload = product_payload(item.product)
     payload.update(
         {
@@ -324,8 +353,8 @@ def order_payload(order: Order) -> dict:
         },
         "items": [
             {
-                "id": item.product.source_id or str(item.product_id),
-                "name": item.product.name,
+                "id": (item.product.source_id if item.product and item.product.source_id else str(item.product_id)),
+                "name": item.product.name if item.product else "Producto no disponible",
                 "price": float(item.unit_price),
                 "quantity": item.quantity,
                 "qty": item.quantity,
@@ -397,7 +426,15 @@ def cart_items_for_user(db, user: User | None) -> list[dict]:
     if not user:
         return []
     items = db.query(CartItem).filter_by(user_id=user.id).order_by(CartItem.id.desc()).all()
-    return [cart_item_payload(item) for item in items]
+    orphan_items = [item for item in items if item.product is None]
+    if orphan_items:
+        try:
+            for item in orphan_items:
+                db.delete(item)
+            db.commit()
+        except SQLAlchemyError:
+            db.rollback()
+    return [cart_item_payload(item) for item in items if item.product is not None]
 
 
 def cart_total(items: list[dict]) -> Decimal:

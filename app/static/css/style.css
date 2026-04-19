@@ -124,7 +124,7 @@ input, select, textarea { font-family: inherit; }
 }
 .nav-icon-btn:hover { color: var(--white); }
 
-.nav-user-menu { position: relative; }
+.nav-user-menu { position: relative; padding-bottom: 6px; }
 .nav-user-btn {
   display: flex;
   align-items: center;
@@ -141,7 +141,7 @@ input, select, textarea { font-family: inherit; }
 .nav-dropdown {
   display: none;
   position: absolute;
-  top: calc(100% + 12px);
+  top: calc(100% + 6px);
   right: 0;
   background: var(--dark-3);
   border: 1px solid rgba(255,255,255,0.1);
@@ -149,7 +149,6 @@ input, select, textarea { font-family: inherit; }
   flex-direction: column;
   z-index: 100;
 }
-.nav-user-menu:hover .nav-dropdown,
 .nav-dropdown.open { display: flex; }
 .nav-dropdown a {
   display: flex;
