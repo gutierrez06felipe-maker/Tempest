@@ -5,7 +5,6 @@ from __future__ import annotations
 from decimal import Decimal, InvalidOperation
 
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for
-from sqlalchemy.exc import SQLAlchemyError
 
 from app.models.models import Order, Product, User
 from app.services.logic import (
@@ -29,7 +28,7 @@ ORDER_STATUSES = {"pendiente", "procesando", "enviado", "entregado", "cancelado"
 def _admin_gate():
     """Proteccion server-side para panel HTML."""
     if not g.user:
-        flash("Inicia sesion para acceder al panel administrador.", "warning")
+        flash("Inicia sesión para acceder al panel administrador.", "warning")
         return redirect(url_for("auth.login_page", next=url_for("products.admin_page")))
     if getattr(g.user, "role", "client") != "admin":
         flash("Acceso restringido al panel administrador.", "danger")
@@ -79,27 +78,15 @@ def _create_product(data) -> tuple[bool, str, dict | None]:
 
 def _delete_product(product_id: str) -> tuple[bool, str]:
     """Elimina solo productos creados desde admin."""
-    try:
-        product = find_product_by_public_id(g.db, product_id)
-        if not product:
-            return False, "Producto no encontrado."
-        if (product.source_id or "").isdigit():
-            return False, "No se pueden eliminar los productos base del catalogo."
-        if product.order_items:
-            return False, "No se puede eliminar un producto asociado a pedidos existentes."
+    product = find_product_by_public_id(g.db, product_id)
+    if not product:
+        return False, "Producto no encontrado."
+    if (product.source_id or "").isdigit():
+        return False, "No se pueden eliminar los productos base del catálogo."
 
-        for cart_item in list(product.cart_items):
-            g.db.delete(cart_item)
-
-        g.db.delete(product)
-        g.db.commit()
-        return True, "Producto eliminado correctamente."
-    except SQLAlchemyError:
-        g.db.rollback()
-        return False, "No fue posible eliminar el producto en este momento."
-    except Exception:
-        g.db.rollback()
-        return False, "Ocurrio un error inesperado al eliminar el producto."
+    g.db.delete(product)
+    g.db.commit()
+    return True, "Producto eliminado correctamente."
 
 
 @bp.get("/products")
@@ -120,7 +107,17 @@ def products_page():
         genders=genders,
         categories=categories,
     )
+@bp.route("/delete-product/<product_id>", methods=["POST"])
+def delete_product_route(product_id):
+    gate = _admin_gate()
+    if gate:
+        return gate
 
+    success, message = _delete_product(product_id)
+
+    flash(message, "success" if success else "danger")
+
+    return redirect(url_for("products.admin_page"))
 
 @bp.get("/products/<product_id>")
 def product_detail(product_id: str):
@@ -168,7 +165,6 @@ def admin_page():
     )
 
 
-@bp.route("/admin/delete-product/<product_id>", methods=["POST"])
 @bp.post("/admin/products/<product_id>/delete")
 def admin_delete_product_page(product_id: str):
     """Delete HTML para productos admin."""
@@ -176,8 +172,8 @@ def admin_delete_product_page(product_id: str):
     if gate:
         return gate
 
-    success, message = _delete_product(product_id)
-    flash(message, "success" if success else "danger")
+    ok, message = _delete_product(product_id)
+    flash(message, "success" if ok else "danger")
     return redirect(url_for("products.admin_page"))
 
 
