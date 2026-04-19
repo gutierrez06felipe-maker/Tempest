@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Mis Pedidos — TEMPEST{% endblock %}
+
+{% block content %}
+<div class="cart-page">
+  <div class="container">
+    <h1>MIS PEDIDOS</h1>
+
+    {% if orders %}
+    <div style="display:grid; gap:20px;">
+      {% for order in orders %}
+      <article class="card" style="border:1px solid rgba(255,255,255,0.08);">
+        <div style="display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:16px;">
+          <div>
+            <p style="font-family:var(--font-display); font-size:0.8rem; letter-spacing:0.14em; color:var(--gray-light); text-transform:uppercase;">Pedido #{{ order.get('id') }}</p>
+            <p style="font-size:0.82rem; color:var(--gray-light); margin-top:6px;">{{ order.get('date', 'Sin fecha') }}</p>
+          </div>
+          <div style="text-align:right;">
+            <p style="font-family:var(--font-display); font-weight:800; font-size:1.3rem;">{{ order.get('total', 0) | fmt_price }}</p>
+            <p style="font-size:0.78rem; color:var(--gray-light); text-transform:uppercase;">{{ order.get('payment_method', 'tarjeta') | replace('_', ' ') }}</p>
+          </div>
+        </div>
+
+        <div style="display:grid; gap:10px; margin-bottom:16px;">
+          {% for item in order.get('items', []) %}
+          <div class="summary-row" style="margin-bottom:0;">
+            <span>{{ item.get('name', 'Producto') }} · Talla {{ item.get('size', 'M') }} · x{{ item.get('qty', 1) }}</span>
+            <span>{{ (item.get('price', 0) * item.get('qty', 1)) | fmt_price }}</span>
+          </div>
+          {% endfor %}
+        </div>
+
+        <div style="display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08);">
+          <p style="font-size:0.82rem; color:var(--gray-light);">Entrega: {{ order.get('address', 'Sin dirección') }}, {{ order.get('city', 'Sin ciudad') }}</p>
+          <span class="badge" style="font-size:0.7rem;">{{ order.get('status', 'pendiente') | upper }}</span>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="cart-empty">
+      <h3>Aún no tienes pedidos</h3>
+      <p>Explora el catálogo y completa tu primera compra.</p>
+      <a href="{{ url_for('products.products_page') }}" class="btn btn--primary">IR AL CATÁLOGO →</a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

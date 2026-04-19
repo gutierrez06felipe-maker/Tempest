@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Pedido Confirmado — TEMPEST{% endblock %}
+
+{% block content %}
+<div class="success-page">
+  <div class="success-card">
+
+    <div class="success-icon">✓</div>
+    <h1>¡PAGO EXITOSO!</h1>
+
+    <p>
+      Gracias por tu compra,
+      <strong>{{ order.get('name', 'Cliente') }}</strong>.<br>
+      {% if order.get('email') %}
+        Recibirás confirmación en <strong>{{ order.get('email') }}</strong>.<br>
+      {% endif %}
+      Método de pago:
+      <strong>
+        {{ order.get('payment_method', 'N/A') | replace('_', ' ') | title }}
+      </strong>
+    </p>
+
+    {# ── Order summary ── #}
+    <div class="order-summary-mini">
+      {% for item in order.get('items', []) %}
+      <div class="row">
+        <span>{{ item.get('name', '?') }} ({{ item.get('size', '?') }}) ×{{ item.get('qty', 1) }}</span>
+        <span>{{ (item.get('price', 0) * item.get('qty', 1)) | fmt_price }}</span>
+      </div>
+      {% endfor %}
+
+      <div class="row">
+        <span>Envío</span>
+        <span style="color:#44dd88;">GRATIS</span>
+      </div>
+      <div class="row total">
+        <span>TOTAL PAGADO</span>
+        <span>{{ order.get('total', 0) | fmt_price }}</span>
+      </div>
+    </div>
+
+    {# ── Delivery info ── #}
+    {% if order.get('address') %}
+    <p style="font-size:.82rem;color:#666;margin-top:16px;">
+      Entrega en: {{ order.get('address') }}, {{ order.get('city') }}
+      {% if order.get('department') %} — {{ order.get('department') }}{% endif %}
+    </p>
+    {% endif %}
+
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:24px;">
+      <a href="{{ url_for('main.home') }}" class="btn btn--outline">VOLVER AL INICIO</a>
+      <a href="{{ url_for('products.products_page') }}" class="btn btn--primary">SEGUIR COMPRANDO →</a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

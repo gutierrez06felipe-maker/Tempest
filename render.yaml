@@ -3,7 +3,8 @@ services:
     name: tempest-commerce
     runtime: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn --bind 0.0.0.0:$PORT templates2.mientorno:app
+    startCommand: gunicorn run:app
+    healthCheckPath: /health
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.9
@@ -12,6 +13,8 @@ services:
       - key: ADMIN_EMAIL
         value: admin@tempest.app
       - key: ADMIN_PASSWORD
+        sync: false
+      - key: ADMIN_INVITE_SECRET
         sync: false
       - key: DATABASE_URL
         fromDatabase:

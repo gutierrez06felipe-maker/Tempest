@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}TEMPEST{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700;1,800;1,900&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+{# ── Resolved once here so every part of the template uses the same values ── #}
+{% set _u = current_user() %}
+{% set _logged_in = _u is not none %}
+{% set _is_admin  = _logged_in and _u.get('role') == 'admin' %}
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+
+    <a href="{{ url_for('main.home') }}" class="nav-logo">
+      <div class="logo-icon">
+        <img src="{{ url_for('static', filename='logo_t.png') }}"
+             alt="TEMPEST"
+             style="width:36px;height:36px;object-fit:contain;display:block;">
+      </div>
+      <span class="logo-text">TEMPEST</span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="{{ url_for('main.home') }}" class="{{ 'active' if request.endpoint == 'main.home' }}">INICIO</a></li>
+      <li><a href="{{ url_for('products.products_page') }}" class="{{ 'active' if request.endpoint == 'products.products_page' }}">CATÁLOGO</a></li>
+      <li><a href="{{ url_for('main.about_page') }}" class="{{ 'active' if request.endpoint == 'main.about_page' }}">NOSOTROS</a></li>
+      <li><a href="{{ url_for('main.support_page') }}" class="{{ 'active' if request.endpoint == 'main.support_page' }}">SOPORTE</a></li>
+    </ul>
+
+    <div class="nav-actions">
+
+      {% if _logged_in %}
+      {# ── Logged-in dropdown (JS click-controlled) ─────────── #}
+      <div class="nav-user-menu" id="userMenu">
+        <button class="nav-user-btn" id="userMenuBtn" type="button"
+                aria-haspopup="true" aria-expanded="false">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+          <span>{{ _u.get('name', 'MI CUENTA') }}</span>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="3" id="userChevron" style="transition:transform .2s;">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+
+        <div class="nav-dropdown" id="userDropdown">
+          {% if _is_admin %}
+          <a href="{{ url_for('products.admin_page') }}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" style="margin-right:6px;">
+              <rect x="3" y="3" width="7" height="7"/>
+              <rect x="14" y="3" width="7" height="7"/>
+              <rect x="14" y="14" width="7" height="7"/>
+              <rect x="3" y="14" width="7" height="7"/>
+            </svg>
+            Panel Admin
+          </a>
+          {% endif %}
+          <a href="{{ url_for('cart.cart_page') }}">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" style="margin-right:6px;">
+              <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 01-8 0"/>
+            </svg>
+            Mi Carrito
+          </a>
+          <a href="{{ url_for('auth.logout_page') }}" style="color:#ff6b6b;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" style="margin-right:6px;">
+              <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            Cerrar Sesión
+          </a>
+        </div>
+      </div>
+
+      {% else %}
+      {# ── Not logged in ─────────────────────────────────────── #}
+      <a href="{{ url_for('auth.login_page') }}" class="nav-icon-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+        <span>INGRESAR</span>
+      </a>
+      {% endif %}
+
+      <a href="{{ url_for('cart.cart_page') }}" class="cart-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 01-8 0"/>
+        </svg>
+        {% set _cnt = get_cart_count() %}
+        {% if _cnt > 0 %}<span class="cart-badge">{{ _cnt }}</span>{% endif %}
+      </a>
+
+      <button class="nav-hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- FLASH MESSAGES -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+        <div class="flash flash--{{ category }}">
+          <span>{{ message }}</span>
+          <button onclick="this.parentElement.remove()">✕</button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<!-- PAGE CONTENT -->
+<main>{% block content %}{% endblock %}</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="{{ url_for('main.home') }}" class="footer-logo">
+        <div class="logo-icon logo-icon--sm">
+          <img src="{{ url_for('static', filename='logo_t.png') }}"
+               alt="TEMPEST"
+               style="width:28px;height:28px;object-fit:contain;display:block;">
+        </div>
+        TEMPEST
+      </a>
+      <p>Ropa deportiva de alto rendimiento diseñada para superar tus límites bajo cualquier condición.</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>TIENDA</h4>
+        <a href="{{ url_for('products.products_page') }}">Catálogo</a>
+        <a href="{{ url_for('products.products_page') }}?gender=Men">Hombre</a>
+        <a href="{{ url_for('products.products_page') }}?gender=Women">Mujer</a>
+        <a href="{{ url_for('products.products_page') }}?gender=Unisex">Unisex</a>
+      </div>
+      <div class="footer-col">
+        <h4>EMPRESA</h4>
+        <a href="{{ url_for('main.about_page') }}">Nosotros</a>
+        <a href="{{ url_for('main.support_page') }}">Soporte</a>
+        <a href="#">Política de privacidad</a>
+        <a href="#">Términos y condiciones</a>
+      </div>
+      <div class="footer-col">
+        <h4>COMUNIDAD</h4>
+        <a href="https://instagram.com/sport.tempest" target="_blank">Instagram</a>
+        <a href="#">#TEMPEST</a>
+        <a href="{{ url_for('auth.register_page') }}">Crear cuenta</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2024 TEMPEST. Todos los derechos reservados.</p>
+    <p>Pagos seguros: PSE · Nequi · Tarjeta · Contra Entrega</p>
+  </div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

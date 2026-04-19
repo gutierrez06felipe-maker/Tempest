@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block title %}TEMPEST — Domina la Tormenta{% endblock %}
+
+{% block content %}
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-text">TEMPEST</div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Colección 2024 — Alto Rendimiento</p>
+    <h1 class="hero-title">
+      <span class="line-1">DOMINA LA</span>
+      <span class="line-2">TORMENTA</span>
+    </h1>
+    <p class="hero-sub">Ropa deportiva de alto rendimiento diseñada para superar tus límites bajo cualquier condición.</p>
+    <div class="hero-actions">
+      <a href="{{ url_for('products.products_page') }}" class="btn btn--primary">COMPRAR AHORA →</a>
+      {% if not current_user() %}
+      <a href="{{ url_for('auth.register_page') }}" class="btn btn--outline">CREAR CUENTA</a>
+      {% else %}
+      <a href="{{ url_for('products.products_page') }}?category=Outerwear" class="btn btn--outline">VER NOVEDADES</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES BAR -->
+<section class="features-bar">
+  <div class="container">
+    <div class="feature-item">
+      <div class="feature-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </div>
+      <h3>Máximo Rendimiento</h3>
+      <p>Materiales seleccionados para mejorar tu desempeño atlético en cada sesión.</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <h3>Durabilidad Extrema</h3>
+      <p>Costuras reforzadas y telas resistentes para los entrenamientos más duros.</p>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h3>Garantía Tempest</h3>
+      <p>Cambios sin costo si el talle no es el correcto. Tu satisfacción es nuestra prioridad.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED PRODUCTS -->
+<section class="section section--dark">
+  <div class="container">
+    <div class="section-heading">
+      <h2>PRODUCTOS <em>DESTACADOS</em></h2>
+      <p>Selección curada de alto rendimiento</p>
+    </div>
+    <div class="products-grid">
+      {% for product in featured %}
+      <div class="product-card">
+        <a href="{{ url_for('products.product_detail', product_id=product.id) }}">
+          <div class="product-img-wrap">
+            <img
+              src="{{ product.image }}"
+              alt="{{ product.name }}"
+              style="width:100%; height:100%; object-fit:cover; display:block; transition: transform 0.5s ease;"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+              onmouseover="this.style.transform='scale(1.05)'"
+              onmouseout="this.style.transform='scale(1)'"
+            >
+            <div class="product-img-placeholder" style="display:none; width:100%; height:100%; background:#1a1a1a; align-items:center; justify-content:center;">
+              <svg viewBox="0 0 80 80" fill="none" width="60" height="60">
+                <rect width="80" height="80" fill="white"/>
+                <path d="M16 16H64V28H46V64H34V28H16V16Z" fill="black"/>
+              </svg>
+            </div>
+            <div class="product-card-badge">
+              <span class="badge {% if product.badge == 'NUEVO' %}badge--new{% elif product.badge == 'ESENCIAL' %}badge--esencial{% endif %}">
+                {{ product.badge }}
+              </span>
+            </div>
+          </div>
+        </a>
+        <div class="product-info">
+          <p class="product-cat">[{{ product.category }}]</p>
+          <a href="{{ url_for('products.product_detail', product_id=product.id) }}">
+            <h3 class="product-name">{{ product.name }}</h3>
+          </a>
+          <p class="product-price">{{ product.price | fmt_price }}</p>
+        </div>
+        <div class="product-card-actions">
+          <a href="{{ url_for('products.product_detail', product_id=product.id) }}" class="btn btn--outline btn--full btn--sm">AGREGAR →</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div style="text-align:center; margin-top: 40px;">
+      <a href="{{ url_for('products.products_page') }}" class="btn btn--outline">VER CATÁLOGO COMPLETO →</a>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCIA COMPLETA -->
+<section class="section section--dark-2">
+  <div class="container">
+    <div class="section-heading" style="text-align:center;">
+      <h2>EXPERIENCIA <em>COMPLETA</em></h2>
+      <p>Todo lo que necesitas en un solo lugar</p>
+    </div>
+    <div class="exp-cards">
+      <div class="exp-card">
+        <div class="exp-card-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        </div>
+        <h3>Seguimiento de Pedidos</h3>
+        <p>Rastrea tu pedido en tiempo real desde la compra hasta la entrega.</p>
+        <a href="{{ url_for('cart.orders_page') }}">VER MIS PEDIDOS →</a>
+      </div>
+      <div class="exp-card">
+        <div class="exp-card-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+        </div>
+        <h3>Soporte 24/7</h3>
+        <p>Nuestro equipo está listo para ayudarte con cualquier consulta.</p>
+        <a href="{{ url_for('main.support_page') }}">CONTACTAR SOPORTE →</a>
+      </div>
+      <div class="exp-card">
+        <div class="exp-card-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        </div>
+        <h3>Pagos Seguros</h3>
+        <p>Múltiples métodos: Tarjeta, PSE, Nequi y Contra Entrega.</p>
+        <a href="{{ url_for('products.products_page') }}">COMPRAR AHORA →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMMUNITY -->
+<section class="community">
+  <div class="container">
+    <div class="community-ig">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" fill="#1a1a1a"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="#1a1a1a" stroke-width="2" stroke-linecap="round"/></svg>
+    </div>
+    <h2>ÚNETE A LA <span>COMUNIDAD</span></h2>
+    <p>Síguenos en Instagram — @sport.tempest</p>
+    <a href="https://instagram.com/sport.tempest" target="_blank" class="ig-btn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/></svg>
+      SEGUIR @SPORT.TEMPEST ↗
+    </a>
+    <p class="community-hashtag">COMPARTE TU ENTRENAMIENTO CON #TEMPEST</p>
+  </div>
+</section>
+{% endblock %}

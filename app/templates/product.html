@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} — TEMPEST{% endblock %}
+
+{% block content %}
+<div class="product-detail-page">
+  <div class="product-detail-grid">
+    <!-- Image -->
+    <div class="product-detail-img" style="background:#111; overflow:hidden; position:relative;">
+      <img src="{{ product.image }}" alt="{{ product.name }}"
+           style="width:100%; height:100%; object-fit:cover; display:block;"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div style="display:none; position:absolute; inset:0; align-items:center; justify-content:center; background:#1a1a1a;">
+        <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+          <rect width="120" height="120" fill="white"/>
+          <path d="M24 24H96V42H69V96H51V42H24V24Z" fill="black"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div class="product-detail-info">
+      <p class="product-detail-cat">[{{ product.category }}] — {{ product.gender }}</p>
+      <h1 class="product-detail-name">{{ product.name }}</h1>
+      <p class="product-detail-price">{{ product.price | fmt_price }}</p>
+      <p class="product-detail-desc">{{ product.description }}</p>
+
+      <!-- Add to cart form -->
+      <form action="{{ url_for('cart.add_to_cart_page') }}" method="post">
+        <input type="hidden" name="product_id" value="{{ product.id }}">
+        <input type="hidden" name="qty" value="1">
+        <input type="hidden" name="size" id="selected-size" value="">
+        <input type="hidden" name="next" value="{{ request.path }}">
+
+        <div class="size-section">
+          <p class="size-label">TALLA — <span id="size-display" style="color: #999; font-weight:400;">Selecciona una talla</span></p>
+          <div class="size-grid">
+            {% for size in product.sizes %}
+            <button type="button" class="size-btn" data-size="{{ size }}"
+              onclick="document.getElementById('selected-size').value='{{ size }}'; document.getElementById('size-display').textContent='{{ size }}'; this.closest('.size-grid').querySelectorAll('.size-btn').forEach(b=>b.classList.remove('selected')); this.classList.add('selected');">
+              {{ size }}
+            </button>
+            {% endfor %}
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn--primary btn--full" style="margin-bottom: 12px;"
+          onclick="if(!document.getElementById('selected-size').value){alert('Por favor selecciona una talla'); return false;}">
+          AGREGAR AL CARRITO
+        </button>
+        <a href="{{ url_for('products.products_page') }}" class="btn btn--outline btn--full">← VOLVER AL CATÁLOGO</a>
+      </form>
+
+      <!-- Features -->
+      <div class="detail-features">
+        <h4>CARACTERÍSTICAS</h4>
+        <ul>
+          {% for f in product.features %}
+          <li>{{ f }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Meta -->
+      <div style="margin-top: 24px; font-size: 0.78rem; color: #555; display:flex; gap:16px;">
+        <span>Color: {{ product.color }}</span>
+        <span>SKU: TMP-{{ '%04d'|format(product.db_id) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Related Products -->
+  {% if related %}
+  <section class="section section--dark">
+    <div class="container">
+      <div class="section-heading">
+        <h2>TAMBIÉN TE <em>INTERESA</em></h2>
+      </div>
+      <div class="products-grid">
+        {% for r in related %}
+        <div class="product-card">
+          <a href="{{ url_for('products.product_detail', product_id=r.id) }}">
+            <div class="product-img-wrap">
+              <img src="{{ r.image }}" alt="{{ r.name }}"
+                   style="width:100%; height:100%; object-fit:cover; display:block;"
+                   onerror="this.style.display='none';">
+              <div class="product-card-badge">
+                <span class="badge">{{ r.badge }}</span>
+              </div>
+            </div>
+          </a>
+          <div class="product-info">
+            <p class="product-cat">[{{ r.category }}]</p>
+            <a href="{{ url_for('products.product_detail', product_id=r.id) }}"><h3 class="product-name">{{ r.name }}</h3></a>
+            <p class="product-price">{{ r.price | fmt_price }}</p>
+          </div>
+          <div class="product-card-actions">
+            <a href="{{ url_for('products.product_detail', product_id=r.id) }}" class="btn btn--outline btn--full btn--sm">VER PRODUCTO →</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

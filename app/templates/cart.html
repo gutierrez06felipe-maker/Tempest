@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Carrito — TEMPEST{% endblock %}
+
+{% block content %}
+<div class="cart-page">
+  <div class="container">
+    <h1>MI CARRITO</h1>
+
+    {% if cart_items %}
+    <div class="cart-layout">
+      <!-- Items -->
+      <div class="cart-items">
+        {% for item in cart_items %}
+        <div class="cart-item">
+          <div class="cart-item-img" style="overflow:hidden;">
+            <img src="{{ item.image if item.image is defined else '' }}" alt="{{ item.name }}"
+                 style="width:100%; height:100%; object-fit:cover;"
+                 onerror="this.style.display='none';">
+          </div>
+          <div>
+            <h3 class="cart-item-name">{{ item.name }}</h3>
+            <p class="cart-item-meta">Talla: {{ item.size }} · Precio unidad: {{ item.price | fmt_price }}</p>
+            <!-- Update qty form -->
+            <form action="{{ url_for('cart.update_cart_page') }}" method="post" style="display:inline;">
+              <input type="hidden" name="product_id" value="{{ item.product_id }}">
+              <input type="hidden" name="size" value="{{ item.size }}">
+              <div class="cart-qty">
+                <button type="button" class="qty-btn qty-down" onclick="this.nextElementSibling.stepDown();this.parentElement.nextElementSibling&&this.parentElement.closest('form').submit()">−</button>
+                <input class="qty-input" type="number" name="qty" value="{{ item.qty }}" min="0" max="10"
+                  onchange="this.closest('form').submit()">
+                <button type="button" class="qty-btn qty-up" onclick="this.previousElementSibling.stepUp();this.closest('form').submit()">+</button>
+              </div>
+            </form>
+            <!-- Remove form -->
+            <form action="{{ url_for('cart.remove_from_cart_page') }}" method="post" style="display:inline; margin-left: 12px;">
+              <input type="hidden" name="product_id" value="{{ item.product_id }}">
+              <input type="hidden" name="size" value="{{ item.size }}">
+              <button type="submit" class="cart-remove-btn">Eliminar</button>
+            </form>
+          </div>
+          <div>
+            <p class="cart-item-price">{{ (item.price * item.qty) | fmt_price }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Summary -->
+      <div class="cart-summary">
+        <h3>RESUMEN DE PEDIDO</h3>
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span>{{ total | fmt_price }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Envío</span>
+          <span style="color:#44dd88;">GRATIS</span>
+        </div>
+        <div class="summary-row total">
+          <span>TOTAL</span>
+          <span>{{ total | fmt_price }}</span>
+        </div>
+        <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 8px;">
+          {% if current_user() %}
+          <a href="{{ url_for('cart.checkout_page') }}" class="btn btn--primary btn--full">PROCEDER AL PAGO →</a>
+          {% else %}
+          <a href="{{ url_for('auth.login_page') }}?next={{ url_for('cart.checkout_page') }}" class="btn btn--primary btn--full">INGRESAR Y PAGAR →</a>
+          {% endif %}
+          <a href="{{ url_for('products.products_page') }}" class="btn btn--outline btn--full">SEGUIR COMPRANDO</a>
+        </div>
+        <p style="font-size: 0.72rem; color: #555; text-align:center; margin-top: 16px; letter-spacing:0.08em;">
+          PSE · NEQUI · TARJETA · CONTRA ENTREGA
+        </p>
+      </div>
+    </div>
+    {% else %}
+    <div class="cart-empty">
+      <h3>Tu carrito está vacío</h3>
+      <p>Explora nuestro catálogo y agrega los productos que deseas.</p>
+      <a href="{{ url_for('products.products_page') }}" class="btn btn--primary">IR AL CATÁLOGO →</a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% block title %}Checkout — TEMPEST{% endblock %}
+
+{% block content %}
+<div class="form-page">
+  <div class="container">
+    <div class="form-header">
+      <h1>CHECKOUT</h1>
+      <p>COMPLETA TU PEDIDO</p>
+    </div>
+
+    {% if errors %}
+    <div style="background: rgba(220,50,50,0.12); border: 1px solid rgba(220,50,50,0.4); border-radius:4px; padding:16px; margin-bottom:24px;">
+      <p style="font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:.8rem; letter-spacing:.15em; color:#ff5555; margin-bottom:8px;">CORRIGE LOS SIGUIENTES ERRORES:</p>
+      {% for e in errors %}
+      <p style="font-size:.82rem; color:#ff7777; margin:4px 0;">— {{ e }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="post" action="{{ url_for('cart.checkout_page') }}" class="checkout-form">
+      <div class="checkout-layout">
+        <!-- Left: form -->
+        <div>
+          <!-- Datos personales -->
+          <div class="checkout-section">
+            <h3>DATOS PERSONALES</h3>
+            <div class="form-grid-2">
+              <div class="form-row">
+                <label>NOMBRE COMPLETO</label>
+                <input class="form-input" type="text" name="name" required
+                  value="{{ checkout_form.get('name', user.get('name', '') if user else '') }}"
+                  placeholder="Tu nombre completo">
+              </div>
+              <div class="form-row">
+                <label>CORREO ELECTRÓNICO</label>
+                <input class="form-input" type="email" name="email" required
+                  value="{{ user.get('email', '') if user else '' }}"
+                  placeholder="tu@email.com">
+              </div>
+            </div>
+            <div class="form-row">
+              <label>TELÉFONO</label>
+              <input class="form-input" type="tel" name="phone" required value="{{ checkout_form.get('phone', user.get('phone', '') if user else '') }}" placeholder="+57 300 000 0000">
+            </div>
+          </div>
+
+          <!-- Dirección -->
+          <div class="checkout-section">
+            <h3>DIRECCIÓN DE ENTREGA</h3>
+            <div class="form-row">
+              <label>DIRECCIÓN</label>
+              <input class="form-input" type="text" name="address" required value="{{ checkout_form.get('address', user.get('address', '') if user else '') }}" placeholder="Calle, número, apartamento">
+            </div>
+            <div class="form-grid-2">
+              <div class="form-row">
+                <label>CIUDAD</label>
+                <input class="form-input" type="text" name="city" required value="{{ checkout_form.get('city', '') }}" placeholder="Bogotá">
+              </div>
+              <div class="form-row">
+                <label>DEPARTAMENTO</label>
+                <select class="form-select" name="department">
+                  <option {% if checkout_form.get('department', 'Cundinamarca') == 'Cundinamarca' %}selected{% endif %}>Cundinamarca</option>
+                  <option {% if checkout_form.get('department') == 'Antioquia' %}selected{% endif %}>Antioquia</option>
+                  <option {% if checkout_form.get('department') == 'Valle del Cauca' %}selected{% endif %}>Valle del Cauca</option>
+                  <option {% if checkout_form.get('department') == 'Atlántico' %}selected{% endif %}>Atlántico</option>
+                  <option {% if checkout_form.get('department') == 'Otro' %}selected{% endif %}>Otro</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Método de pago -->
+          <div class="checkout-section">
+            <h3>MÉTODO DE PAGO</h3>
+            <div class="payment-options">
+              <label class="payment-option">
+                <input type="radio" name="payment" value="tarjeta" {% if checkout_form.get('payment', 'tarjeta') == 'tarjeta' %}checked{% endif %}>
+                <span>💳 Tarjeta de crédito / débito</span>
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="payment" value="pse" {% if checkout_form.get('payment') == 'pse' %}checked{% endif %}>
+                <span>🏦 PSE — Pago en línea</span>
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="payment" value="nequi" {% if checkout_form.get('payment') == 'nequi' %}checked{% endif %}>
+                <span>📱 Nequi</span>
+              </label>
+              <label class="payment-option">
+                <input type="radio" name="payment" value="contraentrega" {% if checkout_form.get('payment') == 'contraentrega' %}checked{% endif %}>
+                <span>🚚 Contra Entrega</span>
+              </label>
+            </div>
+
+            <!-- Tarjeta fields -->
+            <div id="fields-tarjeta" class="payment-fields" style="margin-top:16px;">
+              <div class="form-row">
+                <label>NÚMERO DE TARJETA</label>
+                <input class="form-input" type="text" name="card_number" value="{{ request.form.get('card_number', '') }}" placeholder="0000 0000 0000 0000" maxlength="19">
+              </div>
+              <div class="form-row">
+                <label>NOMBRE DEL TITULAR</label>
+                <input class="form-input" type="text" name="card_name" value="{{ request.form.get('card_name', '') }}" placeholder="Como aparece en la tarjeta">
+              </div>
+              <div class="form-grid-2">
+                <div class="form-row">
+                  <label>FECHA DE EXPIRACIÓN</label>
+                  <input class="form-input" type="text" name="card_expiry" value="{{ request.form.get('card_expiry', '') }}" placeholder="MM/AA" maxlength="5">
+                </div>
+                <div class="form-row">
+                  <label>CVV</label>
+                  <input class="form-input" type="text" name="card_cvv" value="{{ request.form.get('card_cvv', '') }}" placeholder="000" maxlength="4">
+                </div>
+              </div>
+            </div>
+
+            <!-- Nequi fields -->
+            <div id="fields-nequi" class="payment-fields" style="margin-top:16px; display:none;">
+              <div class="form-row">
+                <label>NÚMERO DE CELULAR NEQUI</label>
+              <input class="form-input" type="tel" name="nequi_phone" value="{{ request.form.get('nequi_phone', '') }}" placeholder="+57 300 000 0000">
+              </div>
+              <p style="font-size:.78rem; color:#666; margin-top:8px;">Recibirás una notificación en tu app Nequi para confirmar el pago.</p>
+            </div>
+
+            <!-- PSE fields -->
+            <div id="fields-pse" class="payment-fields" style="margin-top:16px; display:none;">
+              <div class="form-row">
+                <label>BANCO</label>
+                <select class="form-select" name="pse_bank">
+                  <option value="">Selecciona tu banco</option>
+                  <option>Bancolombia</option>
+                  <option>Banco de Bogotá</option>
+                  <option>Davivienda</option>
+                  <option>BBVA Colombia</option>
+                  <option>Banco Popular</option>
+                  <option>Nequi</option>
+                  <option>Otro</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label>TIPO DE CUENTA</label>
+                <select class="form-select" name="pse_account">
+                  <option value="">Selecciona tipo de cuenta</option>
+                  <option value="ahorros">Ahorros</option>
+                  <option value="corriente">Corriente</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Contra entrega -->
+            <div id="fields-contraentrega" class="payment-fields" style="margin-top:16px; display:none;">
+              <p style="font-size:.82rem; color:#888; padding:12px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);">
+                Pagarás en efectivo al recibir tu pedido. El costo de envío puede aplicar según tu ubicación.
+              </p>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn--primary" style="width:100%; margin-top:8px;">
+            CONFIRMAR PEDIDO →
+          </button>
+        </div>
+
+        <!-- Right: order summary -->
+        <div class="order-summary">
+          <h3>TU PEDIDO</h3>
+          {% for item in cart_items %}
+          <div class="order-item">
+            <div>
+              <p class="order-item-name">{{ item.name }}</p>
+              <p class="order-item-meta">Talla: {{ item.size }} × {{ item.qty }}</p>
+            </div>
+            <p class="order-item-price">{{ (item.price * item.qty) | fmt_price }}</p>
+          </div>
+          {% endfor %}
+          <hr style="border-color: rgba(255,255,255,0.08); margin: 16px 0;">
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span>{{ total | fmt_price }}</span>
+          </div>
+          <div class="summary-row">
+            <span>Envío</span>
+            <span style="color:#44dd88;">GRATIS</span>
+          </div>
+          <div class="summary-row total">
+            <span>TOTAL</span>
+            <span>{{ total | fmt_price }}</span>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

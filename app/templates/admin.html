@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% block title %}Panel Admin — TEMPEST{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+  <div class="container">
+    <h1>PANEL <em style="font-style:italic; -webkit-text-stroke:2px rgba(255,255,255,0.3); color:transparent;">ADMIN</em></h1>
+
+    {# ── Stats ──────────────────────────────────────────────── #}
+    <div class="grid-4" style="margin-bottom:40px;">
+      <div style="background:#111;border:1px solid rgba(255,255,255,0.06);padding:24px;">
+        <p style="font-size:.7rem;letter-spacing:.2em;color:#555;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700;margin-bottom:8px;">TOTAL PRODUCTOS</p>
+        <p style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:2.5rem;">{{ products | length }}</p>
+      </div>
+      <div style="background:#111;border:1px solid rgba(255,255,255,0.06);padding:24px;">
+        <p style="font-size:.7rem;letter-spacing:.2em;color:#555;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700;margin-bottom:8px;">TOTAL PEDIDOS</p>
+        <p style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:2.5rem;">{{ orders | length }}</p>
+      </div>
+      <div style="background:#111;border:1px solid rgba(255,255,255,0.06);padding:24px;">
+        <p style="font-size:.7rem;letter-spacing:.2em;color:#555;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700;margin-bottom:8px;">INGRESOS TOTALES</p>
+        <p style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:2.5rem;">{{ total_revenue | fmt_price }}</p>
+      </div>
+      <div style="background:#111;border:1px solid rgba(255,255,255,0.06);padding:24px;">
+        <p style="font-size:.7rem;letter-spacing:.2em;color:#555;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700;margin-bottom:8px;">USUARIOS</p>
+        <p style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:2.5rem;">{{ users | length }}</p>
+      </div>
+    </div>
+
+    <div class="form-box" style="max-width:none; margin:0 0 32px 0;">
+      <form method="post" action="{{ url_for('products.admin_page') }}">
+        <div class="section-heading" style="margin-bottom:24px;">
+          <h2 style="font-size:2rem;">AGREGAR <em>PRODUCTO</em></h2>
+          <p>Alta rápida para nuevos productos del catálogo</p>
+        </div>
+        <div class="form-grid-2">
+          <div class="form-row">
+            <label>NOMBRE</label>
+            <input class="form-input" type="text" name="name" placeholder="Tempest Pro Jacket" required>
+          </div>
+          <div class="form-row">
+            <label>PRECIO</label>
+            <input class="form-input" type="number" step="0.01" min="0" name="price" placeholder="249000" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <label>IMAGEN</label>
+          <input class="form-input" type="url" name="image" placeholder="https://..." required>
+        </div>
+        <div class="form-row">
+          <label>DESCRIPCIÓN</label>
+          <textarea class="form-input" name="description" rows="4" style="resize:vertical;" placeholder="Describe el producto..." required></textarea>
+        </div>
+        <div class="form-grid-2">
+          <div class="form-row">
+            <label>CATEGORÍA</label>
+            <select class="form-select" name="category">
+              <option>Tops</option>
+              <option>Bottoms</option>
+              <option>Compression</option>
+              <option>Outerwear</option>
+              <option>Accessories</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label>GÉNERO</label>
+            <select class="form-select" name="gender">
+              <option>Men</option>
+              <option>Women</option>
+              <option>Unisex</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <label>TALLAS</label>
+          <input class="form-input" type="text" name="sizes" placeholder="S,M,L,XL" value="S,M,L,XL">
+        </div>
+        <button type="submit" class="btn btn--primary">GUARDAR PRODUCTO →</button>
+      </form>
+    </div>
+
+    {# ── Tabs ───────────────────────────────────────────────── #}
+    <div class="admin-tabs">
+      <button class="admin-tab active" data-panel="panel-products">PRODUCTOS</button>
+      <button class="admin-tab"        data-panel="panel-orders">PEDIDOS</button>
+      <button class="admin-tab"        data-panel="panel-users">USUARIOS</button>
+    </div>
+
+    {# ── Products Panel ─────────────────────────────────────── #}
+    <div class="admin-panel active" id="panel-products">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>IMAGEN</th><th>ID</th><th>NOMBRE</th><th>CATEGORÍA</th>
+            <th>GÉNERO</th><th>PRECIO</th><th>BADGE</th><th>TALLAS</th><th>ACCIÓN</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in products %}
+          <tr>
+            <td>
+              <img src="{{ p.get('image', '') }}" alt="{{ p.get('name', '') }}"
+                   style="width:48px;height:48px;object-fit:cover;border-radius:4px;background:#222;"
+                   onerror="this.style.opacity='.15';">
+            </td>
+            <td>#{{ p.get('id', '—') }}</td>
+            <td style="color:white;font-weight:600;">{{ p.get('name', '—') }}</td>
+            <td>{{ p.get('category', '—') }}</td>
+            <td>{{ p.get('gender', '—') }}</td>
+            <td style="font-family:'Barlow Condensed',sans-serif;font-weight:700;color:white;">
+              {{ p.get('price', 0) | fmt_price }}
+            </td>
+            <td><span class="badge" style="font-size:.6rem;">{{ p.get('badge', '') }}</span></td>
+            <td style="font-size:.75rem;">{{ p.get('sizes', []) | join(', ') }}</td>
+            <td>
+              <a href="{{ url_for('products.product_detail', product_id=p.get('id', '')) }}"
+                 style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.75rem;
+                        letter-spacing:.08em;text-transform:uppercase;color:#888;transition:color .2s;"
+                 onmouseover="this.style.color='white'" onmouseout="this.style.color='#888'">VER →</a>
+              {% if not p.get('is_seed', True) %}
+              <form method="post" action="{{ url_for('products.admin_delete_product_page', product_id=p.get('id', '')) }}" style="display:inline;">
+                <button type="submit" style="margin-left:8px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:#ff6b6b;">ELIMINAR</button>
+              </form>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {# ── Orders Panel ───────────────────────────────────────── #}
+    <div class="admin-panel" id="panel-orders">
+      {% if orders %}
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>PEDIDO</th><th>CLIENTE</th><th>NOMBRE</th><th>TOTAL</th>
+            <th>MÉTODO PAGO</th><th>CIUDAD</th><th>FECHA</th><th>ITEMS</th><th>ESTADO</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for o in orders %}
+          <tr>
+            <td style="color:white;font-weight:700;">#{{ '%04d' | format(o.get('id', 0)) }}</td>
+            <td style="font-size:.78rem;">{{ o.get('user', '—') }}</td>
+            <td style="color:white;font-weight:600;">{{ o.get('name', '—') }}</td>
+            <td style="font-family:'Barlow Condensed',sans-serif;font-weight:700;color:white;">
+              {{ o.get('total', 0) | fmt_price }}
+            </td>
+            <td>
+              <span class="badge" style="font-size:.6rem;text-transform:uppercase;">
+                {{ o.get('payment_method', '—') | replace('_', ' ') }}
+              </span>
+            </td>
+            <td style="font-size:.78rem;">{{ o.get('city', '—') }}</td>
+            <td style="font-size:.78rem;">{{ o.get('date', '—') }}</td>
+            <td style="font-size:.78rem;">{{ o.get('items', []) | length }} producto(s)</td>
+            <td>
+              <form method="post" action="{{ url_for('products.update_order_status', order_id=o.get('id', 0)) }}" style="display:flex; gap:8px; align-items:center;">
+                <select class="form-select" name="status" style="padding:8px 10px; min-width:140px;">
+                  {% for status in ['pendiente', 'procesando', 'enviado', 'entregado', 'cancelado'] %}
+                  <option value="{{ status }}" {% if o.get('status') == status %}selected{% endif %}>{{ status|upper }}</option>
+                  {% endfor %}
+                </select>
+                <button type="submit" class="btn btn--outline btn--sm">Guardar</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div style="padding:48px;text-align:center;color:#555;">
+        <p style="font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:700;letter-spacing:.1em;">
+          AÚN NO HAY PEDIDOS
+        </p>
+        <p style="font-size:.82rem;margin-top:8px;">Los pedidos completados aparecerán aquí.</p>
+      </div>
+      {% endif %}
+    </div>
+
+    {# ── Users Panel ────────────────────────────────────────── #}
+    <div class="admin-panel" id="panel-users">
+      <table class="admin-table">
+        <thead>
+          <tr><th>CORREO</th><th>NOMBRE</th><th>ROL</th></tr>
+        </thead>
+        <tbody>
+          {# users is a dict: { email: {password, name, role} } #}
+          {% for email, u in users.items() %}
+          <tr>
+            <td>{{ email }}</td>
+            <td style="color:white;font-weight:600;">{{ u.get('name', '—') }}</td>
+            <td>
+              {% set role = u.get('role', 'client') %}
+              <span class="badge"
+                    style="font-size:.6rem;{% if role == 'admin' %}background:#f0b429;color:#000;{% endif %}">
+                {{ role | upper }}
+              </span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

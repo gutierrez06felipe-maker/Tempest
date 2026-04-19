@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Soporte — TEMPEST{% endblock %}
+
+{% block content %}
+<div class="about-hero">
+  <div class="container">
+    <h1>SOPORTE</h1>
+    <p>Estamos aquí para ayudarte con cualquier consulta sobre tus pedidos, tallas o productos.</p>
+  </div>
+</div>
+
+<section class="section section--dark">
+  <div class="container">
+    <div class="support-grid">
+      <!-- FAQ -->
+      <div>
+        <div class="section-heading">
+          <h2>PREGUNTAS <em>FRECUENTES</em></h2>
+        </div>
+
+        {% for item in faq_items %}
+        <div class="faq-item">
+          <p class="faq-q">{{ item.question }}</p>
+          <p class="faq-a">{{ item.answer }}</p>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <div class="section-heading">
+          <h2>CONTACTA<em>NOS</em></h2>
+        </div>
+        <div class="form-box" style="max-width: 100%; margin: 0;">
+          <form method="post" action="{{ url_for('main.support_page') }}">
+            <div class="form-row">
+              <label>NOMBRE</label>
+              <input class="form-input" type="text" name="name" value="{{ support_form.get('name', '') }}" placeholder="Tu nombre" required>
+            </div>
+            <div class="form-row">
+              <label>CORREO ELECTRÓNICO</label>
+              <input class="form-input" type="email" name="email" value="{{ support_form.get('email', '') }}" placeholder="tu@email.com" required>
+            </div>
+            <div class="form-row">
+              <label>ASUNTO</label>
+              <select class="form-select" name="subject">
+                {% for topic in support_topics %}
+                <option value="{{ topic }}" {% if support_form.get('subject') == topic %}selected{% endif %}>{{ topic }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="form-row">
+              <label>MENSAJE</label>
+              <textarea class="form-input" name="message" rows="5"
+                style="resize:vertical;"
+                placeholder="Describe tu consulta en detalle..." required>{{ support_form.get('message', '') }}</textarea>
+            </div>
+            <button type="submit" class="btn btn--primary btn--full">ENVIAR MENSAJE →</button>
+          </form>
+        </div>
+
+        <div style="margin-top: 32px; display: flex; flex-direction: column; gap: 12px;">
+          {% for channel in contact_channels %}
+          <div style="display:flex; align-items:center; gap:12px; padding: 16px; background: #111; border: 1px solid rgba(255,255,255,0.06);">
+            <div>
+              <p style="font-family: 'Barlow Condensed', sans-serif; font-weight:700; font-size:.8rem; letter-spacing:.1em; text-transform:uppercase;">{{ channel.label }}</p>
+              <p style="font-size:.82rem; color:#666;">{{ channel.value }}</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

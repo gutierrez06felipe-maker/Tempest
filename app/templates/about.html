@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Nosotros — TEMPEST{% endblock %}
+
+{% block content %}
+<div class="about-hero">
+  <div class="container">
+    <h1>SOMOS<br>TEMPEST</h1>
+    <p>Nacimos para equipar a los atletas que nunca se rinden. Diseñamos ropa deportiva de alto rendimiento para aquellos que superan sus límites bajo cualquier condición.</p>
+  </div>
+</div>
+
+<section class="section section--dark">
+  <div class="container">
+    <div class="section-heading" style="text-align:center;">
+      <h2>NUESTROS <em>VALORES</em></h2>
+      <p>Los principios que guían cada prenda que creamos</p>
+    </div>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-number">01</div>
+        <h3>Rendimiento Extremo</h3>
+        <p>Cada prenda está diseñada para potenciar tu desempeño atlético. Seleccionamos materiales que responden a los requerimientos más exigentes del deporte de alto rendimiento.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-number">02</div>
+        <h3>Durabilidad Comprobada</h3>
+        <p>Nuestras costuras reforzadas y telas premium están probadas para resistir los entrenamientos más duros. Inviertes una vez y tu ropa te acompaña durante años.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-number">03</div>
+        <h3>Satisfacción Garantizada</h3>
+        <p>Si el talle no es el correcto, hacemos el cambio sin costo adicional. Tu comodidad y satisfacción son nuestra máxima prioridad en cada transacción.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container" style="text-align:center; max-width: 640px;">
+    <div class="section-heading">
+      <h2>NUESTRA <em>MISIÓN</em></h2>
+    </div>
+    <p style="font-size: 0.95rem; color: #999; line-height: 1.8; margin-bottom: 32px;">
+      En TEMPEST creemos que el equipo correcto puede marcar la diferencia entre una sesión ordinaria y una extraordinaria. Por eso diseñamos ropa que trabaja tan duro como tú, sin importar el clima, la cancha o la distancia.
+    </p>
+    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+      <a href="{{ url_for('products.products_page') }}" class="btn btn--primary">VER CATÁLOGO →</a>
+      <a href="{{ url_for('main.support_page') }}" class="btn btn--outline">CONTACTARNOS</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

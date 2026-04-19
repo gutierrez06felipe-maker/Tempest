@@ -1,0 +1,257 @@
+[
+  {
+    "id": "1",
+    "name": "Camiseta Tempest Pro-Dark",
+    "price": 140000,
+    "description": "Camiseta técnica de alto rendimiento diseñada para entrenamientos intensos. Tejido transpirable con tecnología de secado rápido y costuras planas que evitan rozaduras.",
+    "image": "https://i.postimg.cc/2yG3D47F/1cb8a0a8-759a-412a-a2a6-0aba22645f50.png",
+    "category": "Tops",
+    "gender": "Men",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "gallery": [
+      "https://i.postimg.cc/2yG3D47F/1cb8a0a8-759a-412a-a2a6-0aba22645f50.png"
+    ]
+  },
+  {
+    "id": "2",
+    "name": "Hoodie Tempest Storm",
+    "price": 260000,
+    "description": "Sudadera con capucha premium. Fabricada con una mezcla de algodón y poliéster para mantener la temperatura muscular durante el calentamiento.",
+    "image": "https://i.postimg.cc/rwJNDqfN/Chat-GPT-Image-20-feb-2026-09-01-35-p-m.png",
+    "category": "Outerwear",
+    "gender": "Men",
+    "sizes": [
+      "M",
+      "L",
+      "XL"
+    ],
+    "gallery": [
+      "https://i.postimg.cc/rwJNDqfN/Chat-GPT-Image-20-feb-2026-09-01-35-p-m.png",
+      "https://i.postimg.cc/Zqnp0p9V/Chat-GPT-Image-20-feb-2026-09-05-57-p-m.png"
+    ]
+  },
+  {
+    "id": "3",
+    "name": "Jogger Stealth Black",
+    "price": 220000,
+    "description": "Pantalones deportivos ajustados con tecnología elástica de 4 vías. Bolsillos con cremallera termosellada para máxima seguridad y estilo agresivo.",
+    "image": "https://i.postimg.cc/25hc3dRw/Chat-GPT-Image-20-feb-2026-08-53-44-p-m.png",
+    "category": "Bottoms",
+    "gender": "Men",
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "gallery": [
+      "https://i.postimg.cc/25hc3dRw/Chat-GPT-Image-20-feb-2026-08-53-44-p-m.png"
+    ]
+  },
+  {
+    "id": "4",
+    "name": "Camiseta Compresión Carbon",
+    "price": 168000,
+    "description": "Camiseta de compresión de manga larga que mejora el flujo sanguíneo y reduce la fatiga muscular. Diseño aerodinámico en color negro mate.",
+    "image": "https://i.postimg.cc/136b2VRM/Chat-GPT-Image-20-feb-2026-09-18-23-p-m.png",
+    "category": "Compression",
+    "gender": "Men",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "gallery": [
+      "https://i.postimg.cc/136b2VRM/Chat-GPT-Image-20-feb-2026-09-18-23-p-m.png"
+    ]
+  },
+  {
+    "id": "5",
+    "name": "Gorra Tempest Snapback",
+    "price": 100000,
+    "description": "Accesorio imprescindible con el logo Tempest bordado en 3D. Visera plana y cierre ajustable para un estilo urbano y deportivo.",
+    "image": "https://i.postimg.cc/jj8V40Sz/Chat-GPT-Image-20-feb-2026-09-26-25-p-m.png",
+    "category": "Accessories",
+    "gender": "Unisex",
+    "sizes": [
+      "Unique"
+    ],
+    "gallery": [
+      "https://i.postimg.cc/jj8V40Sz/Chat-GPT-Image-20-feb-2026-09-26-25-p-m.png",
+      "https://i.postimg.cc/XqRQkx5k/Chat-GPT-Image-20-feb-2026-09-24-11-p-m.png"
+    ]
+  },
+  {
+    "id": "6",
+    "name": "Top Deportivo Wave - Mujer",
+    "price": 128000,
+    "description": "Sujeción media para actividades de alto impacto. Tejido de doble capa que garantiza cobertura y soporte sin sacrificar la transpirabilidad.",
+    "image": "https://i.postimg.cc/ZqnsZ9Jy/Chat-GPT-Image-20-feb-2026-09-31-32-p-m.png",
+    "category": "Tops",
+    "gender": "Women",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L"
+    ],
+    "gallery": [
+      "https://i.postimg.cc/ZqnsZ9Jy/Chat-GPT-Image-20-feb-2026-09-31-32-p-m.png",
+      "https://i.postimg.cc/DwyBdWJm/Chat-GPT-Image-20-feb-2026-09-34-11-p-m.png"
+    ]
+  },
+  {
+    "id": "7",
+    "name": "Leggings Tempest High-Waist",
+    "price": 192000,
+    "description": "Leggings de cintura alta con efecto moldeador. Costuras reforzadas y tejido \"squat-proof\" diseñado para los entrenamientos más exigentes.",
+    "image": "https://i.postimg.cc/zv23sP7V/Chat-GPT-Image-20-feb-2026-09-45-53-p-m.png",
+    "category": "Bottoms",
+    "gender": "Women",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L"
+    ],
+    "gallery": [
+      "https://i.postimg.cc/zv23sP7V/Chat-GPT-Image-20-feb-2026-09-45-53-p-m.png"
+    ]
+  },
+  {
+    "id": "8",
+    "name": "Chaqueta de Viento Tempest",
+    "price": 340000,
+    "description": "Capa exterior ligera y resistente al viento. Ideal para entrenamientos al aire libre en condiciones climáticas adversas. Detalles reflectantes.",
+    "image": "https://i.postimg.cc/TwCPbHZr/Chat-GPT-Image-20-feb-2026-09-48-45-p-m.png",
+    "category": "Outerwear",
+    "gender": "Men",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "gallery": [
+      "https://i.postimg.cc/TwCPbHZr/Chat-GPT-Image-20-feb-2026-09-48-45-p-m.png"
+    ]
+  },
+  {
+    "id": "9",
+    "name": "Compresión Silver Mist - Mujer",
+    "price": 160000,
+    "description": "Camiseta de compresión ligera para mujer en gris perla. Proporciona soporte muscular localizado y una estética elegante y minimalista.",
+    "image": "https://i.postimg.cc/mrQfQh6S/Gemini-Generated-Image-9ogzx39ogzx39ogz.png",
+    "category": "Compression",
+    "gender": "Women",
+    "sizes": [
+      "XS",
+      "S",
+      "M"
+    ],
+    "gallery": [
+      "https://i.postimg.cc/mrQfQh6S/Gemini-Generated-Image-9ogzx39ogzx39ogz.png"
+    ]
+  },
+  {
+    "id": "10",
+    "name": "Pantalón Cargo Sport Stealth",
+    "price": 240000,
+    "description": "Pantalones tipo cargo adaptados al deporte. Múltiples bolsillos tácticos y puños elásticos para un ajuste seguro durante el movimiento.",
+    "image": "https://i.postimg.cc/X7FRMr4P/Gemini-Generated-Image-6oc9746oc9746oc9.png",
+    "category": "Bottoms",
+    "gender": "Men",
+    "sizes": [
+      "M",
+      "L",
+      "XL"
+    ],
+    "gallery": [
+      "https://i.postimg.cc/X7FRMr4P/Gemini-Generated-Image-6oc9746oc9746oc9.png"
+    ]
+  },
+  {
+    "id": "11",
+    "name": "Hoodie Tempest Cloud - Mujer",
+    "price": 260000,
+    "description": "Sudadera con capucha de corte cropped en gris suave. El equilibrio perfecto entre estilo agresivo y comodidad absoluta post-entrenamiento.",
+    "image": "https://i.postimg.cc/8zNnqwyZ/Gemini-Generated-Image-uwk5yluwk5yluwk5.png",
+    "category": "Outerwear",
+    "gender": "Women",
+    "sizes": [
+      "XS",
+      "S",
+      "M"
+    ],
+    "gallery": [
+      "https://i.postimg.cc/8zNnqwyZ/Gemini-Generated-Image-uwk5yluwk5yluwk5.png"
+    ]
+  },
+  {
+    "id": "12",
+    "name": "Mochila Táctica Tempest",
+    "price": 300000,
+    "description": "Mochila de alta capacidad con sistema MOLLE para accesorios. Compartimentos especializados para ropa húmeda y equipamiento pesado.",
+    "image": "https://i.postimg.cc/XJS5z1L4/Gemini-Generated-Image-bz6bwxbz6bwxbz6b.png",
+    "category": "Accessories",
+    "gender": "Unisex",
+    "sizes": [
+      "Unique"
+    ],
+    "gallery": [
+      "https://i.postimg.cc/XJS5z1L4/Gemini-Generated-Image-bz6bwxbz6bwxbz6b.png"
+    ]
+  },
+  {
+    "id": "13",
+    "name": "Botella Tempest Steel Elite",
+    "price": 112000,
+    "description": "Botella de acero inoxidable de doble pared con aislamiento térmico. Mantiene tus bebidas frías hasta 24 horas. Grabado láser del logo Tempest.",
+    "image": "https://i.postimg.cc/WzzcdgP0/e5e35b0a-707d-4d5a-89dd-f1f6f5cc463b.png",
+    "category": "Accessories",
+    "gender": "Unisex",
+    "sizes": [
+      "1L"
+    ],
+    "gallery": [
+      "https://i.postimg.cc/WzzcdgP0/e5e35b0a-707d-4d5a-89dd-f1f6f5cc463b.png"
+    ]
+  },
+  {
+    "id": "14",
+    "name": "Botella Hydro-Tempest Blue",
+    "price": 88000,
+    "description": "Botella ergonómica de alto impacto con acabado traslúcido. Diseñada para una hidratación rápida durante sesiones de entrenamiento de alta intensidad.",
+    "image": "https://i.postimg.cc/HLdKJXwc/33b5db38-5bf5-445e-b5db-048ce8231681.png",
+    "category": "Accessories",
+    "gender": "Unisex",
+    "sizes": [
+      "750ml"
+    ],
+    "gallery": [
+      "https://i.postimg.cc/HLdKJXwc/33b5db38-5bf5-445e-b5db-048ce8231681.png"
+    ]
+  },
+  {
+    "id": "15",
+    "name": "Kit de Mancuernas Pro - Tempest Elite",
+    "price": 500000,
+    "description": "Sistema versátil de entrenamiento de fuerza con agarre ergonómico antideslizante. Kit incluye discos intercambiables de hierro fundido con recubrimiento protector.",
+    "image": "https://i.postimg.cc/j5t2pDwV/Chat-GPT-Image-21-feb-2026-09-09-46-p-m.png",
+    "category": "Accessories",
+    "gender": "Unisex",
+    "sizes": [
+      "10kg",
+      "20kg",
+      "30kg"
+    ],
+    "gallery": [
+      "https://i.postimg.cc/j5t2pDwV/Chat-GPT-Image-21-feb-2026-09-09-46-p-m.png"
+    ]
+  }
+]
